@@ -1,5 +1,7 @@
-export class MainScene extends Phaser.Scene {
-  private phaserSprite: Phaser.GameObjects.Sprite;
+import { GameObjects, Scene } from 'phaser';
+
+export class MainScene extends Scene {
+  private phaserSprite: GameObjects.Sprite;
 
   constructor() {
     super({
