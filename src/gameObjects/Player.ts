@@ -23,5 +23,7 @@ export class Player {
     } else if (keyboardControls.right.isDown) {
       this._playerSprite.x += GameInfo.PlayerHorizontalSpeed * deltaTime;
     }
+
+    this._sceneCamera.x = this._playerSprite.x;
   }
 }

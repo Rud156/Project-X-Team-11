@@ -3,6 +3,7 @@ import AssetManager from '../utils/AssetManager';
 import GameInfo from '../utils/GameInfo';
 import { WorldObject3D } from '../gameObjects/WorldObject3D';
 import { Player } from '../gameObjects/Player';
+import ExtensionFunctions from '../utils/ExtensionFunctions';
 
 export class MainScene extends Scene {
   private _roadMarkers: Array<WorldObject3D>;
@@ -15,6 +16,12 @@ export class MainScene extends Scene {
   private _player: Player;
   private _keyboardControls: Types.Input.Keyboard.CursorKeys;
 
+  private _isCurveSpawnActive: boolean;
+  private _currentCurveMarkersCount: number;
+  private _isLeftCurve: boolean;
+
+  private _currentRoadXPosition: number;
+
   constructor() {
     super({
       key: 'MainScene',
@@ -22,6 +29,12 @@ export class MainScene extends Scene {
 
     this._roadMarkers = [];
     this._roadObjectsRemoved = 0;
+
+    this._isCurveSpawnActive = false;
+    this._currentCurveMarkersCount = 0;
+    this._isLeftCurve = false;
+
+    this._currentRoadXPosition = 0;
   }
 
   preload(): void {
@@ -42,7 +55,7 @@ export class MainScene extends Scene {
   private createCamera(): void {
     this._mainCamera = this.cameras3d
       .add(80)
-      .setPosition(0, 0, 300)
+      .setPosition(this._currentRoadXPosition, 0, 300)
       .setPixelScale(32);
     // @ts-ignore
     this.scene.sys = this.scene.systems;
@@ -52,7 +65,11 @@ export class MainScene extends Scene {
   private createInitialRoadMarkers(): void {
     const initialRoadMarkerCount = 30;
     for (let i = 0; i < initialRoadMarkerCount; i++) {
-      this.spawnRoadBoundaryPair(0, GameInfo.WorldDefaultY, this._mainCamera.z - 20 - i * 10);
+      this.spawnRoadBoundaryPair(
+        this._currentRoadXPosition,
+        GameInfo.WorldDefaultY,
+        this._mainCamera.z - 20 - i * GameInfo.GapBetweenRoadMarker
+      );
     }
 
     this._maxZPosition = this._mainCamera.z - initialRoadMarkerCount * 10;
@@ -60,7 +77,7 @@ export class MainScene extends Scene {
 
   private createPlayer(): void {
     this._player = new Player(AssetManager.WhitePixelString, this._mainCamera);
-    this._player.create(0, 8, this._mainCamera.z - 10);
+    this._player.create(this._currentRoadXPosition, 8, this._mainCamera.z - 10);
   }
 
   update(time: number, delta: number) {
@@ -86,7 +103,38 @@ export class MainScene extends Scene {
       if (this._roadObjectsRemoved >= 2) {
         this._roadObjectsRemoved = 0;
 
-        this.spawnRoadBoundaryPair(0, GameInfo.WorldDefaultY, this._maxZPosition);
+        if (!this._isCurveSpawnActive) {
+          const randomValue = Math.random();
+
+          if (randomValue <= GameInfo.CurvedRoadSpawnProbability) {
+            this._isCurveSpawnActive = true;
+            this._currentCurveMarkersCount = Math.floor(
+              ExtensionFunctions.randomInRange(GameInfo.MinCurveMarkersCount, GameInfo.MaxCurveMarkersCount)
+            );
+
+            if (Math.random() <= 0.5) {
+              this._isLeftCurve = true;
+            } else {
+              this._isLeftCurve = false;
+            }
+          }
+        }
+
+        if (this._isCurveSpawnActive) {
+          if (this._isLeftCurve) {
+            this._currentRoadXPosition -= GameInfo.GapBetweenRoadMarker;
+          } else {
+            this._currentRoadXPosition += GameInfo.GapBetweenRoadMarker;
+          }
+
+          this._currentCurveMarkersCount -= 1;
+
+          if (this._currentCurveMarkersCount <= 0) {
+            this._isCurveSpawnActive = false;
+          }
+        }
+
+        this.spawnRoadBoundaryPair(this._currentRoadXPosition, GameInfo.WorldDefaultY, this._maxZPosition);
       }
     }
   }

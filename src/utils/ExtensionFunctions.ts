@@ -18,9 +18,12 @@ const map = (from: number, fromMin: number, fromMax: number, toMin: number, toMa
   return to;
 };
 
-const getMethods = obj => Object.getOwnPropertyNames(obj);
+const randomInRange = (min: number, max: number) => {
+  const randomValue = Math.random();
+  return min + randomValue * (max - min);
+};
 
 export default {
   map,
-  getMethods,
+  randomInRange
 };

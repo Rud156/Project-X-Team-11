@@ -10,10 +10,16 @@ const WorldRoadWidth = 80;
 const WorldDefaultY = 20;
 
 // Player Movement
-const PlayerHorizontalSpeed = 20;
+const PlayerHorizontalSpeed = 100;
 
 // Collision
-const CheckCollisionLimit = 5;
+const CheckCollisionLimit = 10;
+
+// Road
+const CurvedRoadSpawnProbability = 0.05;
+const MinCurveMarkersCount = 10;
+const MaxCurveMarkersCount = 20;
+const GapBetweenRoadMarker = 10;
 
 export default {
   ScreenWidth,
@@ -28,4 +34,9 @@ export default {
   PlayerHorizontalSpeed,
 
   CheckCollisionLimit,
+
+  CurvedRoadSpawnProbability,
+  MinCurveMarkersCount,
+  MaxCurveMarkersCount,
+  GapBetweenRoadMarker,
 };
