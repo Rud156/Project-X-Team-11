@@ -25,6 +25,7 @@ module.exports = {
       { test: /phaser\.js$/, loader: 'expose-loader?Phaser' },
     ],
   },
+  devtool: 'inline-source-map',
   devServer: {
     contentBase: path.resolve(__dirname, './'),
     publicPath: '/dist/',
