@@ -5,8 +5,9 @@ const HalfScreenWidth = ScreenWidth / 2.0;
 const HalfScreenHeight = ScreenHeight / 2.0;
 
 // World Info
-const WorldMovementSpeed = 100;
-const WorldRoadWidth = 50;
+const WorldMovementSpeed = 30;
+const WorldRoadWidth = 10;
+const WorldDefaultY = -60;
 
 // Collision
 const CheckCollisionLimit = 5;
@@ -19,6 +20,7 @@ export default {
 
   WorldMovementSpeed,
   WorldRoadWidth,
+  WorldDefaultY,
 
   CheckCollisionLimit,
 };

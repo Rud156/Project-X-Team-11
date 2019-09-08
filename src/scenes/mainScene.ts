@@ -1,11 +1,14 @@
 import { GameObjects, Scene, Input } from 'phaser';
-import { WorldObject } from '../gameObjects/WorldObject';
 import AssetManager from '../utils/AssetManager';
 import GameInfo from '../utils/GameInfo';
+import { WorldObject3D } from '../gameObjects/WorldObject3D';
 
 export class MainScene extends Scene {
-  private _roadMarkers: Array<WorldObject>;
+  private _roadMarkers: Array<WorldObject3D>;
   private _roadObjectsRemoved: number;
+
+  private _mainCamera: any; // 3D Camera
+  private cameras3d: any; // Placeholder 3D Cameras
 
   private _playerCar: GameObjects.Sprite;
 
@@ -19,13 +22,19 @@ export class MainScene extends Scene {
   }
 
   preload(): void {
+    this.load.scenePlugin('Camera3DPlugin', './lib/camera3d.min.js', 'Camera3DPlugin', 'cameras3d');
     this.load.image(AssetManager.LineMarkerString, AssetManager.LineMarker);
   }
 
   create() {
+    this._mainCamera = this.cameras3d
+      .add(80)
+      .setPosition(0, 0, 300)
+      .setPixelScale(200);
+
     const initialRoadMarkerCount = Math.floor(GameInfo.HalfScreenWidth / 10.0);
     for (let i = 0; i < initialRoadMarkerCount; i++) {
-      this.spawnRoadBoundaryPair(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight, GameInfo.HalfScreenWidth - i * 10);
+      this.spawnRoadBoundaryPair(0, GameInfo.WorldDefaultY, this._mainCamera.z - 20 - i * 10);
     }
   }
 
@@ -43,20 +52,21 @@ export class MainScene extends Scene {
       }
 
       if (this._roadObjectsRemoved >= 2) {
-        this._roadObjectsRemoved = 0;
-        this.spawnRoadBoundaryPair(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight, GameInfo.HalfScreenWidth);
+        this._roadObjectsRemoved += 0;
+
+        this.spawnRoadBoundaryPair(0, GameInfo.WorldDefaultY, GameInfo.ScreenWidth);
       }
     }
   }
 
   private spawnRoadBoundaryPair(x: number, y: number, z: number) {
-    const roadBoundaryLeft = new WorldObject(AssetManager.LineMarkerString, this);
-    const roadBoundaryRight = new WorldObject(AssetManager.LineMarkerString, this);
+    const leftMarker = new WorldObject3D(AssetManager.LineMarkerString, this._mainCamera);
+    const rightMarker = new WorldObject3D(AssetManager.LineMarkerString, this._mainCamera);
 
-    roadBoundaryLeft.setup(x - GameInfo.WorldRoadWidth / 2.0, y, z);
-    roadBoundaryRight.setup(x + GameInfo.WorldRoadWidth / 2.0, y, z);
+    leftMarker.create(x - GameInfo.WorldRoadWidth / 2.0, y, z);
+    rightMarker.create(x + GameInfo.WorldRoadWidth / 2.0, y, z);
 
-    this._roadMarkers.push(roadBoundaryLeft);
-    this._roadMarkers.push(roadBoundaryRight);
+    this._roadMarkers.push(leftMarker);
+    this._roadMarkers.push(rightMarker);
   }
 }

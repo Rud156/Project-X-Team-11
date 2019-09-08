@@ -22,7 +22,7 @@ export class WorldObject {
     this._assetName = assetName;
   }
 
-  public setup(x: number, y: number, initialZ: number): void {
+  public create(x: number, y: number, initialZ: number): void {
     this._x = x;
     this._y = y;
     this._z = initialZ;
