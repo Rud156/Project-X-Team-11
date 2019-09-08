@@ -3,6 +3,7 @@ import { Types } from 'phaser';
 
 import { MainScene } from './scenes/MainScene';
 import GameInfo from './utils/GameInfo';
+import { GameOverScene } from './scenes/GameOverScene';
 
 // main game configuration
 const config: Types.Core.GameConfig = {
@@ -10,7 +11,7 @@ const config: Types.Core.GameConfig = {
   height: GameInfo.ScreenHeight,
   type: Phaser.AUTO,
   parent: 'game',
-  scene: MainScene,
+  scene: [MainScene, GameOverScene],
   physics: {
     default: 'arcade',
     arcade: {

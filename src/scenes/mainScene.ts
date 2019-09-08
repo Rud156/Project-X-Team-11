@@ -1,9 +1,10 @@
-import { GameObjects, Scene, Types } from 'phaser';
+import { Scene, Types } from 'phaser';
 import AssetManager from '../utils/AssetManager';
 import GameInfo from '../utils/GameInfo';
 import { WorldObject3D } from '../gameObjects/WorldObject3D';
 import { Player } from '../gameObjects/Player';
 import ExtensionFunctions from '../utils/ExtensionFunctions';
+import CollisionUtils from '../utils/CollisionUtils';
 
 export class MainScene extends Scene {
   private _roadMarkers: Array<WorldObject3D>;
@@ -24,7 +25,7 @@ export class MainScene extends Scene {
 
   constructor() {
     super({
-      key: 'MainScene',
+      key: GameInfo.MainSceneName,
     });
 
     this._roadMarkers = [];
@@ -85,6 +86,7 @@ export class MainScene extends Scene {
 
     this.updateRoadMarkers(deltaTime);
     this.updatePlayerMovement(deltaTime);
+    this.checkCollisions();
 
     this._mainCamera.update();
   }
@@ -103,6 +105,8 @@ export class MainScene extends Scene {
       if (this._roadObjectsRemoved >= 2) {
         this._roadObjectsRemoved = 0;
 
+        // TODO: This is a very hacky method to spawn curved path
+        // Need to change this later on...
         if (!this._isCurveSpawnActive) {
           const randomValue = Math.random();
 
@@ -141,6 +145,23 @@ export class MainScene extends Scene {
 
   private updatePlayerMovement(deltaTime: number): void {
     this._player.update(deltaTime, this._keyboardControls);
+  }
+
+  private checkCollisions(): void {
+    for (let i = 0; i < this._roadMarkers.length; i++) {
+      const worldObject = this._roadMarkers[i];
+
+      if (
+        CollisionUtils.checkOverlappingCollision(
+          this._player.getPlayerPosition(),
+          worldObject.getObjectPosition(),
+          this._player.getPlayerSize(),
+          worldObject.getObjectSize()
+        )
+      ) {
+        this.scene.switch(GameInfo.GameOverSceneName);
+      }
+    }
   }
 
   private spawnRoadBoundaryPair(x: number, y: number, z: number) {

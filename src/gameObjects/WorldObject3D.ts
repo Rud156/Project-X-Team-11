@@ -1,4 +1,5 @@
 import GameInfo from '../utils/GameInfo';
+import { Math } from 'phaser';
 
 export class WorldObject3D {
   private _objectSprite: any;
@@ -34,5 +35,17 @@ export class WorldObject3D {
 
   public destroy(): void {
     this._sceneCamera.remove(this._objectSprite);
+  }
+
+  public getObjectPosition(): Math.Vector3 {
+    return new Math.Vector3(this._objectSprite.x, this._objectSprite.y, this._objectSprite.z);
+  }
+
+  public getObjectScale(): Math.Vector2 {
+    return this._objectSprite.scale;
+  }
+
+  public getObjectSize(): Math.Vector2 {
+    return this._objectSprite.size;
   }
 }

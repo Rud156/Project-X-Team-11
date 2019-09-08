@@ -1,3 +1,6 @@
 {
-    "files.autoSave": "off"
+    "files.autoSave": "off",
+    "cSpell.words": [
+        "hacky"
+    ]
 }

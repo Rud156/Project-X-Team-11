@@ -26,4 +26,16 @@ export class Player {
 
     this._sceneCamera.x = this._playerSprite.x;
   }
+
+  public getPlayerPosition(): Math.Vector3 {
+    return new Math.Vector3(this._playerSprite.x, this._playerSprite.y, this._playerSprite.z);
+  }
+
+  public getPlayerScale(): Math.Vector2 {
+    return this._playerSprite.scale;
+  }
+
+  public getPlayerSize(): Math.Vector2 {
+    return this._playerSprite.size;
+  }
 }

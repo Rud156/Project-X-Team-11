@@ -13,13 +13,17 @@ const WorldDefaultY = 20;
 const PlayerHorizontalSpeed = 100;
 
 // Collision
-const CheckCollisionLimit = 10;
+const CheckCollisionZLimit = 3;
 
 // Road
 const CurvedRoadSpawnProbability = 0.05;
 const MinCurveMarkersCount = 10;
 const MaxCurveMarkersCount = 20;
 const GapBetweenRoadMarker = 10;
+
+// Scenes
+const MainSceneName = 'MainScene';
+const GameOverSceneName = 'GameOverScene';
 
 export default {
   ScreenWidth,
@@ -33,10 +37,13 @@ export default {
 
   PlayerHorizontalSpeed,
 
-  CheckCollisionLimit,
+  CheckCollisionZLimit,
 
   CurvedRoadSpawnProbability,
   MinCurveMarkersCount,
   MaxCurveMarkersCount,
   GapBetweenRoadMarker,
+
+  MainSceneName,
+  GameOverSceneName,
 };
