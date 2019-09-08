@@ -57,7 +57,7 @@ export class WorldObject {
   }
 
   public isObjectCollisionValid(): boolean {
-    return this._z <= GameInfo.CheckCollisionLimit;
+    return this._z <= GameInfo.CheckCollisionZLimit;
   }
 
   public destroy(): void {
