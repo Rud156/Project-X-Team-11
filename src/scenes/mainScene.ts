@@ -33,7 +33,7 @@ export class MainScene extends Scene {
     this._mainCamera = this.cameras3d
       .add(80)
       .setPosition(0, 0, 300)
-      .setPixelScale(128);
+      .setPixelScale(32);
     this.scene.sys = this.scene.systems;
     this._mainCamera.setScene(this.scene);
 
@@ -63,12 +63,7 @@ export class MainScene extends Scene {
         this._roadObjectsRemoved += 1;
 
         this._roadMarkers[i].destroy();
-        delete this._roadMarkers[i];
-        this._roadMarkers = this._roadMarkers.filter(value => {
-          if (value) {
-            return true;
-          }
-        });
+        this._roadMarkers.splice(i, 1);
       }
 
       if (this._roadObjectsRemoved >= 2) {
@@ -80,8 +75,8 @@ export class MainScene extends Scene {
   }
 
   private spawnRoadBoundaryPair(x: number, y: number, z: number) {
-    const leftMarker = new WorldObject3D(AssetManager.LineMarkerString, this._mainCamera, this.scene);
-    const rightMarker = new WorldObject3D(AssetManager.LineMarkerString, this._mainCamera, this.scene);
+    const leftMarker = new WorldObject3D(AssetManager.LineMarkerString, this._mainCamera);
+    const rightMarker = new WorldObject3D(AssetManager.LineMarkerString, this._mainCamera);
 
     leftMarker.create(x - GameInfo.WorldRoadWidth / 2.0, y, z);
     rightMarker.create(x + GameInfo.WorldRoadWidth / 2.0, y, z);
