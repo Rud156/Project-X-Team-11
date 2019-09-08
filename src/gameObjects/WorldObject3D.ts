@@ -33,6 +33,6 @@ export class WorldObject3D {
   }
 
   public destroy(): void {
-    this._objectSprite.destroy();
+    this._sceneCamera.remove(this._objectSprite);
   }
 }

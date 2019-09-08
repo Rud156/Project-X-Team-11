@@ -18,6 +18,9 @@ const map = (from: number, fromMin: number, fromMax: number, toMin: number, toMa
   return to;
 };
 
+const getMethods = obj => Object.getOwnPropertyNames(obj);
+
 export default {
   map,
+  getMethods,
 };
