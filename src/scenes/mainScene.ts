@@ -58,6 +58,7 @@ export class MainScene extends Scene {
       .add(80)
       .setPosition(this._currentRoadXPosition, 0, 300)
       .setPixelScale(32);
+
     // @ts-ignore
     this.scene.sys = this.scene.systems;
     this._mainCamera.setScene(this.scene);
@@ -156,7 +157,8 @@ export class MainScene extends Scene {
           this._player.getPlayerPosition(),
           worldObject.getObjectPosition(),
           this._player.getPlayerSize(),
-          worldObject.getObjectSize()
+          worldObject.getObjectSize(),
+          1
         )
       ) {
         this.scene.switch(GameInfo.GameOverSceneName);

@@ -8,6 +8,7 @@ const HalfScreenHeight = ScreenHeight / 2.0;
 const WorldMovementSpeed = 100;
 const WorldRoadWidth = 80;
 const WorldDefaultY = 20;
+const DistanceRemoveBehindCamera = 5;
 
 // Player Movement
 const PlayerHorizontalSpeed = 100;
@@ -34,6 +35,7 @@ export default {
   WorldMovementSpeed,
   WorldRoadWidth,
   WorldDefaultY,
+  DistanceRemoveBehindCamera,
 
   PlayerHorizontalSpeed,
 

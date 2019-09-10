@@ -5,10 +5,21 @@ const checkOverlappingCollision = (
   object1Position: Maths.Vector3,
   object2Position: Maths.Vector3,
   object1Size: Maths.Vector2,
-  object2Size: Maths.Vector2
+  object2Size: Maths.Vector2,
+  checkCollisionDirection: number = 0
 ): boolean => {
-  if (Math.abs(object1Position.z - object2Position.z) > GameInfo.CheckCollisionZLimit) {
+  if (checkCollisionDirection === 0 && Math.abs(object1Position.z - object2Position.z) > GameInfo.CheckCollisionZLimit) {
     return false;
+  } else if (checkCollisionDirection === -1) {
+    const diff = object2Position.z - object1Position.z;
+    if (diff > GameInfo.CheckCollisionZLimit || diff < 0) {
+      return false;
+    }
+  } else if (checkCollisionDirection === 1) {
+    const diff = object1Position.z - object2Position.z;
+    if (diff > GameInfo.CheckCollisionZLimit || diff < 0) {
+      return false;
+    }
   }
 
   const object1TopLeftCorner = new Maths.Vector2(object1Position.x - object1Size.x / 2.0, object1Position.y - object1Size.y / 2.0);
@@ -30,6 +41,11 @@ const checkOverlappingCollision = (
     yCollided = true;
   } else if (object1BottomRightCorner.y >= object2TopLeftCorner.y && object1BottomRightCorner.y <= object2BottomRightCorner.y) {
     yCollided = true;
+  }
+
+  if (xCollided && yCollided) {
+    console.log(`1 Position: ${object1Position.x}, ${object1Position.y}, ${object1Position.z}`);
+    console.log(`2 Position: ${object2Position.x}, ${object2Position.y}, ${object2Position.z}`);
   }
 
   return xCollided && yCollided;
