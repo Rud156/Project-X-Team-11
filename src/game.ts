@@ -1,19 +1,21 @@
 import 'phaser';
 import { Types } from 'phaser';
 
-import { MainScene } from './scenes/mainScene';
+import { MainScene } from './scenes/MainScene';
+import GameInfo from './utils/GameInfo';
+import { GameOverScene } from './scenes/GameOverScene';
 
 // main game configuration
 const config: Types.Core.GameConfig = {
-  width: 800,
-  height: 600,
+  width: GameInfo.ScreenWidth,
+  height: GameInfo.ScreenHeight,
   type: Phaser.AUTO,
   parent: 'game',
-  scene: MainScene,
+  scene: [MainScene, GameOverScene],
   physics: {
     default: 'arcade',
     arcade: {
-      gravity: { y: 200 },
+      gravity: { y: 0 },
     },
   },
 };
