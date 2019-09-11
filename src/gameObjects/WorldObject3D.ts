@@ -37,8 +37,8 @@ export class WorldObject3D {
     this._sceneCamera.remove(this._objectSprite);
   }
 
-  public getObjectPosition(): Math.Vector3 {
-    return new Math.Vector3(this._objectSprite.x, this._objectSprite.y, this._objectSprite.z);
+  public getObjectPosition(): Math.Vector4 {
+    return this._objectSprite.position;
   }
 
   public getObjectScale(): Math.Vector2 {

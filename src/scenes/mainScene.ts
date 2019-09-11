@@ -1,21 +1,26 @@
-import { Scene, Types } from 'phaser';
+import { Scene, Types, Input } from 'phaser';
 import AssetManager from '../utils/AssetManager';
 import GameInfo from '../utils/GameInfo';
 import { WorldObject3D } from '../gameObjects/WorldObject3D';
-import { Player } from '../gameObjects/Player';
+import { Player } from '../gameObjects/player/Player';
 import ExtensionFunctions from '../utils/ExtensionFunctions';
 import CollisionUtils from '../utils/CollisionUtils';
+import { ObjectShaker } from '../camera/ObjectShaker';
+import { PlayerController } from '../gameObjects/player/PlayerController';
 
 export class MainScene extends Scene {
+  private _testKey: Input.Keyboard.Key;
+
   private _roadMarkers: Array<WorldObject3D>;
   private _roadObjectsRemoved: number;
   private _maxZPosition: number;
 
   private _mainCamera: any; // 3D Camera
   private cameras3d: any; // Placeholder 3D Cameras
+  private _cameraShaker: ObjectShaker;
 
   private _player: Player;
-  private _keyboardControls: Types.Input.Keyboard.CursorKeys;
+  private _playerController: PlayerController;
 
   private _isCurveSpawnActive: boolean;
   private _currentCurveMarkersCount: number;
@@ -50,7 +55,7 @@ export class MainScene extends Scene {
     this.createInitialRoadMarkers();
     this.createPlayer();
 
-    this._keyboardControls = this.input.keyboard.createCursorKeys();
+    this._testKey = this.input.keyboard.addKey(Input.Keyboard.KeyCodes.X);
   }
 
   private createCamera(): void {
@@ -62,6 +67,8 @@ export class MainScene extends Scene {
     // @ts-ignore
     this.scene.sys = this.scene.systems;
     this._mainCamera.setScene(this.scene);
+
+    this._cameraShaker = new ObjectShaker();
   }
 
   private createInitialRoadMarkers(): void {
@@ -80,16 +87,21 @@ export class MainScene extends Scene {
   private createPlayer(): void {
     this._player = new Player(AssetManager.WhitePixelString, this._mainCamera);
     this._player.create(this._currentRoadXPosition, 8, this._mainCamera.z - 10);
+
+    this._playerController = new PlayerController(this.input);
   }
 
   update(time: number, delta: number) {
     const deltaTime = delta / 1000.0;
 
+    if (Input.Keyboard.JustDown(this._testKey)) {
+      this._cameraShaker.startShaking(0.5, 3);
+    }
+
     this.updateRoadMarkers(deltaTime);
     this.updatePlayerMovement(deltaTime);
-    this.checkCollisions();
-
-    this._mainCamera.update();
+    // this.checkCollisions(); // TODO: UnComment Later On...
+    this.updateCameras(deltaTime);
   }
 
   private updateRoadMarkers(deltaTime: number) {
@@ -145,7 +157,10 @@ export class MainScene extends Scene {
   }
 
   private updatePlayerMovement(deltaTime: number): void {
-    this._player.update(deltaTime, this._keyboardControls);
+    this._playerController.update();
+
+    this._player.update(deltaTime, this._playerController.PlayerDirection);
+    this._mainCamera.x = this._player.getPlayerPosition().x;
   }
 
   private checkCollisions(): void {
@@ -164,6 +179,19 @@ export class MainScene extends Scene {
         this.scene.switch(GameInfo.GameOverSceneName);
       }
     }
+  }
+
+  private updateCameras(deltaTime: number): void {
+    const shakePosition = this._cameraShaker.update(deltaTime, this._mainCamera.x, this._mainCamera.y, this._mainCamera.z);
+
+    // TODO: Find a better way to do this...
+    if (!this._cameraShaker.IsShakingActive()) {
+      shakePosition.y = 0;
+      shakePosition.z = 300;
+    }
+
+    this._mainCamera.setPosition(shakePosition.x, shakePosition.y, shakePosition.z);
+    this._mainCamera.update();
   }
 
   private spawnRoadBoundaryPair(x: number, y: number, z: number) {

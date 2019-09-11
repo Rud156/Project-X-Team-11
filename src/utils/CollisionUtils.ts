@@ -2,8 +2,8 @@ import { Math as Maths } from 'phaser';
 import GameInfo from './GameInfo';
 
 const checkOverlappingCollision = (
-  object1Position: Maths.Vector3,
-  object2Position: Maths.Vector3,
+  object1Position: Maths.Vector4,
+  object2Position: Maths.Vector4,
   object1Size: Maths.Vector2,
   object2Size: Maths.Vector2,
   checkCollisionDirection: number = 0

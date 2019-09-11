@@ -1,5 +1,6 @@
 import { Types, Math } from 'phaser';
-import GameInfo from '../utils/GameInfo';
+import GameInfo from '../../utils/GameInfo';
+import { PlayerDirection } from './PlayerController';
 
 export class Player {
   private _playerSprite: any;
@@ -17,18 +18,16 @@ export class Player {
     this._playerSprite.size = new Math.Vector2(5, 2);
   }
 
-  public update(deltaTime: number, keyboardControls: Types.Input.Keyboard.CursorKeys) {
-    if (keyboardControls.left.isDown) {
+  public update(deltaTime: number, controlDirection: PlayerDirection) {
+    if (controlDirection == PlayerDirection.Left) {
       this._playerSprite.x -= GameInfo.PlayerHorizontalSpeed * deltaTime;
-    } else if (keyboardControls.right.isDown) {
+    } else if (controlDirection == PlayerDirection.Right) {
       this._playerSprite.x += GameInfo.PlayerHorizontalSpeed * deltaTime;
     }
-
-    this._sceneCamera.x = this._playerSprite.x;
   }
 
-  public getPlayerPosition(): Math.Vector3 {
-    return new Math.Vector3(this._playerSprite.x, this._playerSprite.y, this._playerSprite.z);
+  public getPlayerPosition(): Math.Vector4 {
+    return this._playerSprite.position;
   }
 
   public getPlayerScale(): Math.Vector2 {
