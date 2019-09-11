@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "devDependencies": {
     "expose-loader": "^0.7.5",
-    "friendly-errors-webpack-plugin": "^1.7.0",
     "fork-ts-checker-webpack-plugin": "^1.5.0",
+    "friendly-errors-webpack-plugin": "^1.7.0",
     "prettier": "^1.18.2",
     "serve": "^11.1.0",
     "ts-loader": "^6.0.4",
@@ -19,7 +19,9 @@
   },
   "scripts": {
     "dev": "webpack --mode development && webpack-dev-server --mode development",
-    "build": "webpack --mode production && webpack-dev-server --mode production"
+    "build": "webpack --mode production",
+    "serve": "npm run build && serve ./",
+    "deploy": "firebase deploy"
   },
   "license": "MIT"
 }
