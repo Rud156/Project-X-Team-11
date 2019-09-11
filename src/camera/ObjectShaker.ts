@@ -3,8 +3,11 @@ import ExtensionFunctions from '../utils/ExtensionFunctions';
 
 export class ObjectShaker {
   private _shakeActive: boolean;
-  private _shakeMultiplier: number;
   private _shakeTimer: number;
+
+  private _shakeMultiplierX: number;
+  private _shakeMultiplierY: number;
+  private _shakeMultiplierZ: number;
 
   private _shakeOffset: Math.Vector3;
 
@@ -15,9 +18,9 @@ export class ObjectShaker {
   public update(deltaTime: number, currentX: number, currentY: number, currentZ: number): Math.Vector3 {
     if (this._shakeActive) {
       this._shakeOffset.set(
-        ExtensionFunctions.randomInRange(-this._shakeMultiplier, this._shakeMultiplier),
-        ExtensionFunctions.randomInRange(-this._shakeMultiplier, this._shakeMultiplier),
-        ExtensionFunctions.randomInRange(-this._shakeMultiplier, this._shakeMultiplier)
+        ExtensionFunctions.randomInRange(-this._shakeMultiplierX, this._shakeMultiplierX),
+        ExtensionFunctions.randomInRange(-this._shakeMultiplierY, this._shakeMultiplierY),
+        ExtensionFunctions.randomInRange(-this._shakeMultiplierZ, this._shakeMultiplierZ)
       );
 
       this._shakeTimer -= deltaTime;
@@ -35,10 +38,13 @@ export class ObjectShaker {
     return this._shakeOffset;
   }
 
-  public startShaking(shakeMultiplier: number, shakeTime: number) {
+  public startShaking(shakeTime: number, shakeMultiplierX: number, shakeMultiplierY: number, shakeMultiplierZ: number) {
     this._shakeActive = true;
-    this._shakeMultiplier = shakeMultiplier;
     this._shakeTimer = shakeTime;
+
+    this._shakeMultiplierX = shakeMultiplierX;
+    this._shakeMultiplierY = shakeMultiplierY;
+    this._shakeMultiplierZ = shakeMultiplierZ;
   }
 
   public stopShaking(): void {

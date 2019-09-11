@@ -26,6 +26,12 @@ export class Player {
     }
   }
 
+  public setPlayerPosition(x: number, y: number, z: number): void {
+    this._playerSprite.x = x;
+    this._playerSprite.y = y;
+    this._playerSprite.z = z;
+  }
+
   public getPlayerPosition(): Math.Vector4 {
     return this._playerSprite.position;
   }
