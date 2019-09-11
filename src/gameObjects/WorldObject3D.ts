@@ -17,8 +17,8 @@ export class WorldObject3D {
     this._objectSprite = this._sceneCamera.create(x, y, initialZ, this._assetName);
   }
 
-  public update(deltaTime: number): void {
-    this._objectSprite.z += GameInfo.WorldMovementSpeed * deltaTime;
+  public update(deltaTime: number, currentSpeed: number): void {
+    this._objectSprite.z += currentSpeed * deltaTime;
 
     if (this._objectSprite.z > this._sceneCamera.z + GameInfo.DistanceRemoveBehindCamera) {
       this._objectOutOfView = true;

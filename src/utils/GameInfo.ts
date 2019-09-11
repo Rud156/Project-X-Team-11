@@ -6,12 +6,12 @@ const HalfScreenHeight = ScreenHeight / 2.0;
 
 // World Info
 const WorldMovementSpeed = 100;
-const WorldRoadWidth = 80;
+const WorldRoadWidth = 100;
 const WorldDefaultY = 20;
 const DistanceRemoveBehindCamera = 5;
+const SpeedIncrementRate = 1;
 
 // Player
-const PlayerHorizontalSpeed = 100;
 const PlayerMaxLives = 3;
 const PlayerInitialYPosition = 8;
 const PlayerZCameraOffset = -10;
@@ -46,8 +46,8 @@ export default {
   WorldRoadWidth,
   WorldDefaultY,
   DistanceRemoveBehindCamera,
+  SpeedIncrementRate,
 
-  PlayerHorizontalSpeed,
   PlayerMaxLives,
   PlayerInitialYPosition,
   PlayerZCameraOffset,

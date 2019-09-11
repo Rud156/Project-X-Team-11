@@ -18,11 +18,11 @@ export class Player {
     this._playerSprite.size = new Math.Vector2(5, 2);
   }
 
-  public update(deltaTime: number, controlDirection: PlayerDirection) {
+  public update(deltaTime: number, currentSpeed: number, controlDirection: PlayerDirection) {
     if (controlDirection == PlayerDirection.Left) {
-      this._playerSprite.x -= GameInfo.PlayerHorizontalSpeed * deltaTime;
+      this._playerSprite.x -= currentSpeed * deltaTime;
     } else if (controlDirection == PlayerDirection.Right) {
-      this._playerSprite.x += GameInfo.PlayerHorizontalSpeed * deltaTime;
+      this._playerSprite.x += currentSpeed * deltaTime;
     }
   }
 

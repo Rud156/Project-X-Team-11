@@ -34,6 +34,8 @@ export class MainScene extends Scene {
   private _playerScore: number;
   private _playerScoreDisplay: GameObjects.Text;
 
+  private _currentSpeed: number;
+
   constructor() {
     super({
       key: GameInfo.MainSceneName,
@@ -62,6 +64,7 @@ export class MainScene extends Scene {
     this.createPlayer();
     this.createOtherSceneItem();
 
+    this._currentSpeed = GameInfo.WorldMovementSpeed;
     this._testKey = this.input.keyboard.addKey(Input.Keyboard.KeyCodes.X);
   }
 
@@ -116,6 +119,7 @@ export class MainScene extends Scene {
     const deltaTime = delta / 1000.0;
 
     this._playerScore += deltaTime * GameInfo.ScoreIncrementRate;
+    this._currentSpeed += GameInfo.ScoreIncrementRate * deltaTime;
 
     this.updateRoadMarkers(deltaTime);
     this.updatePlayerMovement(deltaTime);
@@ -126,7 +130,7 @@ export class MainScene extends Scene {
 
   private updateRoadMarkers(deltaTime: number) {
     for (let i = this._roadMarkers.length - 1; i >= 0; i--) {
-      this._roadMarkers[i].update(deltaTime);
+      this._roadMarkers[i].update(deltaTime, this._currentSpeed);
 
       if (this._roadMarkers[i].isObjectOutOfView()) {
         this._roadObjectsRemoved += 1;
@@ -178,7 +182,7 @@ export class MainScene extends Scene {
 
   private updatePlayerMovement(deltaTime: number): void {
     this._playerController.update();
-    this._player.update(deltaTime, this._playerController.PlayerDirection);
+    this._player.update(deltaTime, this._currentSpeed, this._playerController.PlayerDirection);
 
     this._mainCamera.x = this._player.getPlayerPosition().x;
     this._mainCamera.y = GameInfo.CameraDefaultY;
@@ -205,15 +209,9 @@ export class MainScene extends Scene {
           (this.scene.get(GameInfo.GameOverSceneName) as GameOverScene).setGameOverScore(this._playerScore);
         } else {
           this._playerLivesDisplay.setText(`Lives: ${this._playerLives}`);
-
-          const roadApproxCenter = this._roadMarkers[0].getObjectPosition().x + GameInfo.WorldRoadWidth / 2.0;
-          this._player.setPlayerPosition(
-            roadApproxCenter,
-            GameInfo.PlayerInitialYPosition,
-            this._mainCamera.z + GameInfo.PlayerZCameraOffset
-          );
-
           this._cameraShaker.startShaking(0.5, 1, 0.3, 0);
+
+          this.resetScreen();
         }
       }
     }
@@ -228,6 +226,24 @@ export class MainScene extends Scene {
 
   private updateOtherGameObjects(deltaTime: number): void {
     this._playerScoreDisplay.setText(`Score: ${Math.floor(this._playerScore)}`);
+  }
+
+  private resetScreen() {
+    this._currentRoadXPosition = 0;
+
+    for (let i = 0; i < this._roadMarkers.length; i++) {
+      this._roadMarkers[i].destroy();
+    }
+    this._roadMarkers.length = 0;
+
+    this._player.setPlayerPosition(
+      this._currentRoadXPosition,
+      GameInfo.PlayerInitialYPosition,
+      this._mainCamera.z + GameInfo.PlayerZCameraOffset
+    );
+    this._mainCamera.x = this._player.getPlayerPosition().x;
+
+    this.createInitialRoadMarkers();
   }
 
   private spawnRoadBoundaryPair(x: number, y: number, z: number) {
