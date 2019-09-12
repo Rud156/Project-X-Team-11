@@ -21,7 +21,7 @@
     "dev": "webpack --mode development && webpack-dev-server --mode development",
     "build": "webpack --mode production",
     "serve": "npm run build && serve ./",
-    "deploy": "firebase deploy"
+    "deploy": "npm run build && firebase deploy"
   },
   "license": "MIT"
 }

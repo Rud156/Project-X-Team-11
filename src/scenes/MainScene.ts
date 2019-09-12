@@ -1,4 +1,4 @@
-import { Scene, Types, Input, GameObjects } from 'phaser';
+import { Scene, Types, Input, GameObjects, Math as Maths, Geom } from 'phaser';
 import AssetManager from '../utils/AssetManager';
 import GameInfo from '../utils/GameInfo';
 import { WorldObject3D } from '../gameObjects/WorldObject3D';
@@ -6,7 +6,7 @@ import { Player } from '../gameObjects/player/Player';
 import ExtensionFunctions from '../utils/ExtensionFunctions';
 import CollisionUtils from '../utils/CollisionUtils';
 import { ObjectShaker } from '../common/ObjectShaker';
-import { PlayerController } from '../gameObjects/player/PlayerController';
+import { PlayerController, PlayerDirection } from '../gameObjects/player/PlayerController';
 import { GameOverScene } from './GameOverScene';
 
 export class MainScene extends Scene {
@@ -15,13 +15,18 @@ export class MainScene extends Scene {
 
   private _sky: GameObjects.Image;
 
+  private _car: GameObjects.Sprite;
+  private _carRectangle: Geom.Rectangle;
+
   private _roadMarkers: Array<WorldObject3D>;
+  private _currentGapMultiplier: number;
   private _roadObjectsRemoved: number;
   private _maxZPosition: number;
 
   private _mainCamera: any; // 3D Camera
   private cameras3d: any; // Placeholder 3D Cameras
   private _cameraShaker: ObjectShaker;
+  private _lookAtLerp: number = 0;
 
   private _player: Player;
   private _playerController: PlayerController;
@@ -103,10 +108,13 @@ export class MainScene extends Scene {
   }
 
   private createPlayer(): void {
-    this._player = new Player(AssetManager.CarImageString, this._mainCamera);
+    this._player = new Player(AssetManager.WhitePixelString, this._mainCamera);
     this._player.create(this._currentRoadXPosition, GameInfo.PlayerInitialYPosition, this._mainCamera.z + GameInfo.PlayerZCameraOffset);
 
     this._playerController = new PlayerController(this.input);
+
+    this._car = this.add.sprite(GameInfo.HalfScreenWidth, GameInfo.ScreenHeight - 64, AssetManager.CarImageString);
+    this._carRectangle = this._car.getBounds();
   }
 
   private createOtherSceneItem(): void {
@@ -138,12 +146,14 @@ export class MainScene extends Scene {
 
     this._playerScore += deltaTime * GameInfo.ScoreIncrementRate;
     this._currentSpeed += GameInfo.ScoreIncrementRate * deltaTime;
+    this._currentSpeed = Math.min(this._currentSpeed, GameInfo.WorldMovementMaxSpeed);
 
     this.updateRoadMarkers(deltaTime);
-    this.updatePlayerMovement(deltaTime);
-    this.updateCameras(deltaTime);
     this.checkCollisions();
     this.updateOtherGameObjects(deltaTime);
+
+    this.updatePlayerMovement(deltaTime);
+    this.updateCameras(deltaTime);
   }
 
   private updateRoadMarkers(deltaTime: number) {
@@ -160,8 +170,6 @@ export class MainScene extends Scene {
       if (this._roadObjectsRemoved >= 2) {
         this._roadObjectsRemoved = 0;
 
-        // TODO: This is a very hacky method to spawn curved path
-        // Need to change this later on...
         if (!this._isCurveSpawnActive) {
           const randomValue = Math.random();
 
@@ -170,6 +178,7 @@ export class MainScene extends Scene {
             this._currentCurveMarkersCount = Math.floor(
               ExtensionFunctions.randomInRange(GameInfo.MinCurveMarkersCount, GameInfo.MaxCurveMarkersCount)
             );
+            this._currentGapMultiplier = GameInfo.GapIncrementRate;
 
             if (Math.random() <= 0.5) {
               this._isLeftCurve = true;
@@ -179,20 +188,7 @@ export class MainScene extends Scene {
           }
         }
 
-        if (this._isCurveSpawnActive) {
-          if (this._isLeftCurve) {
-            this._currentRoadXPosition -= GameInfo.GapBetweenRoadMarker;
-          } else {
-            this._currentRoadXPosition += GameInfo.GapBetweenRoadMarker;
-          }
-
-          this._currentCurveMarkersCount -= 1;
-
-          if (this._currentCurveMarkersCount <= 0) {
-            this._isCurveSpawnActive = false;
-          }
-        }
-
+        this.checkAndCreateCurvedRoads();
         this.spawnRoadBoundaryPair(this._currentRoadXPosition, GameInfo.WorldDefaultY, this._maxZPosition);
       }
     }
@@ -202,7 +198,9 @@ export class MainScene extends Scene {
     this._playerController.update();
     this._player.update(deltaTime, this._currentSpeed, this._playerController.PlayerDirection);
 
-    this._mainCamera.x = this._player.getPlayerPosition().x;
+    const centerRoadPosition = (this._roadMarkers[2].getObjectPosition().x + this._roadMarkers[3].getObjectPosition().x) / 2.0;
+    this._mainCamera.x = Maths.Linear(this._mainCamera.x, centerRoadPosition, GameInfo.CameraMovementLerpAmount * deltaTime);
+
     this._mainCamera.y = GameInfo.CameraDefaultY;
     this._mainCamera.z = GameInfo.CameraDefaultZ;
   }
@@ -211,15 +209,12 @@ export class MainScene extends Scene {
     for (let i = 0; i < this._roadMarkers.length; i++) {
       const worldObject = this._roadMarkers[i];
 
-      if (
-        CollisionUtils.checkOverlappingCollision(
-          this._player.getPlayerPosition(),
-          worldObject.getObjectPosition(),
-          this._player.getPlayerCustomSize(),
-          worldObject.getObjectSize(),
-          1
-        )
-      ) {
+      const position = worldObject.getObjectPosition();
+      const screenPosition = worldObject.getUnProjectedVector();
+      this._mainCamera.project(position, screenPosition);
+      worldObject.setUnProjectedVector(screenPosition);
+
+      if (this._carRectangle.contains(screenPosition.x, screenPosition.y)) {
         this._playerLives -= 1;
 
         if (this._playerLives <= 0) {
@@ -227,8 +222,8 @@ export class MainScene extends Scene {
           (this.scene.get(GameInfo.GameOverSceneName) as GameOverScene).setGameOverScore(this._playerScore);
         } else {
           this._playerLivesDisplay.setText(`Lives: ${this._playerLives}`);
-          this._cameraShaker.startShaking(0.5, 1, 0.3, 0);
 
+          this._cameraShaker.startShaking(0.5, 1, 0.3, 0);
           this.resetScreen();
         }
       }
@@ -238,7 +233,14 @@ export class MainScene extends Scene {
   private updateCameras(deltaTime: number): void {
     const shakePosition = this._cameraShaker.update(deltaTime, this._mainCamera.x, this._mainCamera.y, this._mainCamera.z);
 
+    if (this._playerController.PlayerDirection == PlayerDirection.Left) {
+      this._lookAtLerp -= (this._currentSpeed + GameInfo.CameraRotationLerpAmount) * deltaTime;
+    } else if (this._playerController.PlayerDirection == PlayerDirection.Right) {
+      this._lookAtLerp += (this._currentSpeed + GameInfo.CameraRotationLerpAmount) * deltaTime;
+    }
+
     this._mainCamera.setPosition(shakePosition.x, shakePosition.y, shakePosition.z);
+    this._mainCamera.lookAt(this._mainCamera.x + this._lookAtLerp, 0, -GameInfo.CameraDefaultZ);
     this._mainCamera.update();
   }
 
@@ -246,7 +248,11 @@ export class MainScene extends Scene {
     this._playerScoreDisplay.setText(`Score: ${Math.floor(this._playerScore)}`);
   }
 
-  private resetScreen() {
+  //#endregion
+
+  //#region External Functions
+
+  public resetScreen(resetLives: boolean = false) {
     this._currentRoadXPosition = 0;
 
     for (let i = 0; i < this._roadMarkers.length; i++) {
@@ -260,13 +266,37 @@ export class MainScene extends Scene {
       this._mainCamera.z + GameInfo.PlayerZCameraOffset
     );
     this._mainCamera.x = this._player.getPlayerPosition().x;
-
     this.createInitialRoadMarkers();
+
+    if (resetLives) {
+      this._playerLives = GameInfo.PlayerMaxLives;
+      this._playerLivesDisplay.setText(`Lives: ${this._playerLives}`);
+    }
+
+    this._playerController.resetController();
   }
 
   //#endregion
 
   //#region Utility Functions
+
+  private checkAndCreateCurvedRoads() {
+    if (this._isCurveSpawnActive) {
+      if (this._isLeftCurve) {
+        this._currentRoadXPosition -= GameInfo.GapBetweenRoadMarker * this._currentGapMultiplier;
+      } else {
+        this._currentRoadXPosition += GameInfo.GapBetweenRoadMarker * this._currentGapMultiplier;
+      }
+
+      this._currentCurveMarkersCount -= 1;
+      this._currentGapMultiplier += GameInfo.GapIncrementRate;
+      this._currentGapMultiplier = Math.min(this._currentGapMultiplier, 1);
+
+      if (this._currentCurveMarkersCount <= 0) {
+        this._isCurveSpawnActive = false;
+      }
+    }
+  }
 
   private spawnRoadBoundaryPair(x: number, y: number, z: number) {
     const leftMarker = new WorldObject3D(AssetManager.LineMarkerString, this._mainCamera);

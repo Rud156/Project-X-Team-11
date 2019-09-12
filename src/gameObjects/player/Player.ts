@@ -17,7 +17,7 @@ export class Player {
 
   public create(x: number, y: number, z: number) {
     this._playerSprite = this._sceneCamera.create(x, y, z, this._assetName);
-    this._playerSprite.size = new Math.Vector2(1, 1);
+    this._playerSprite.size = new Math.Vector2(0, 0);
     this._playerCustomSize = new Math.Vector2(10, 7);
   }
 
