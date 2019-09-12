@@ -27,9 +27,14 @@ const checkOverlappingCollision = (
 
   const object2TopLeftCorner = new Maths.Vector2(object2Position.x - object2Size.x / 2.0, object2Position.y - object2Size.y / 2.0);
   const object2BottomRightCorner = new Maths.Vector2(object2Position.x + object2Size.x / 2.0, object2Position.y + object2Size.x / 2.0);
-//console.log(object1TopLeftCorner.x,object2TopLeftCorner.x,object1TopLeftCorner.x,object2BottomRightCorner.x);
+
   let xCollided = false;
   let yCollided = false;
+
+  console.log(`1 Size: ${object1Size.x} ${object1Size.y}`);
+  console.log(`2 Size: ${object2Size.x} ${object2Size.y}`);
+  console.log(`1 Position: ${object1Position.x}, ${object1Position.y}, ${object1Position.z}`);
+  console.log(`2 Position: ${object2Position.x}, ${object2Position.y}, ${object2Position.z}`);
 
   if (object1TopLeftCorner.x >= object2TopLeftCorner.x && object1TopLeftCorner.x <= object2BottomRightCorner.x) {
     xCollided = true;
