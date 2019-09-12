@@ -13,7 +13,6 @@ export class MainScene extends Scene {
   private _testKey: Input.Keyboard.Key;
 
   private _sky: GameObjects.Image;
-  private _horizon: GameObjects.Image;
 
   private _roadMarkers: Array<WorldObject3D>;
   private _roadObjectsRemoved: number;
@@ -62,7 +61,6 @@ export class MainScene extends Scene {
     this.load.image(AssetManager.LineMarkerString, AssetManager.LineMarker);
     this.load.image(AssetManager.WhitePixelString, AssetManager.WhitePixel);
     this.load.image(AssetManager.BackgroundString, AssetManager.Background);
-    this.load.image(AssetManager.HorizonString, AssetManager.Horizon);
   }
 
   create() {
@@ -126,8 +124,6 @@ export class MainScene extends Scene {
       .setDepth(-5000)
       .setDisplaySize(GameInfo.ScreenWidth, GameInfo.ScreenHeight)
       .setSize(GameInfo.ScreenWidth, GameInfo.ScreenHeight);
-
-    this._horizon = this.add.image(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight, AssetManager.HorizonString).setDepth(-4000);
   }
 
   //#endregion

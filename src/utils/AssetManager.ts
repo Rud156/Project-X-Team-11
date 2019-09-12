@@ -7,11 +7,8 @@ const LineMarkerString = 'LineMarker';
 const PhaserImage = './src/assets/phaser.png';
 const PhaserImageString = 'Phaser';
 
-const Background = './src/assets/BackGround.png';
+const Background = './src/assets/Background.png';
 const BackgroundString = 'Background';
-
-const Horizon = './src/assets/HorizonWide.png';
-const HorizonString = 'Horizon';
 
 export default {
   WhitePixel,
@@ -25,7 +22,4 @@ export default {
 
   Background,
   BackgroundString,
-
-  Horizon,
-  HorizonString,
 };
