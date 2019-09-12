@@ -20,10 +20,11 @@ const PlayerZCameraOffset = -10;
 const CheckCollisionZLimit = 3;
 
 // Road
-const CurvedRoadSpawnProbability = 0.05;
-const MinCurveMarkersCount = 10;
-const MaxCurveMarkersCount = 20;
+const CurvedRoadSpawnProbability = 0.1;
+const MinCurveMarkersCount = 20;
+const MaxCurveMarkersCount = 30;
 const GapBetweenRoadMarker = 10;
+const GapIncrementRate = 0.1;
 
 // Scoring
 const ScoreIncrementRate = 10;
@@ -58,6 +59,7 @@ export default {
   MinCurveMarkersCount,
   MaxCurveMarkersCount,
   GapBetweenRoadMarker,
+  GapIncrementRate,
 
   ScoreIncrementRate,
 

@@ -11,11 +11,11 @@ import { GameOverScene } from './GameOverScene';
 
 export class MainScene extends Scene {
   private _testKey: Input.Keyboard.Key;
-  private _keyboardCursorKeys: Types.Input.Keyboard.CursorKeys;
 
   private _sky: GameObjects.Image;
 
   private _roadMarkers: Array<WorldObject3D>;
+  private _currentGapMultiplier: number;
   private _roadObjectsRemoved: number;
   private _maxZPosition: number;
 
@@ -73,7 +73,6 @@ export class MainScene extends Scene {
 
     this._currentSpeed = GameInfo.WorldMovementSpeed;
     this._testKey = this.input.keyboard.addKey(Input.Keyboard.KeyCodes.X);
-    this._keyboardCursorKeys = this.input.keyboard.createCursorKeys();
   }
 
   private createCamera(): void {
@@ -170,6 +169,7 @@ export class MainScene extends Scene {
             this._currentCurveMarkersCount = Math.floor(
               ExtensionFunctions.randomInRange(GameInfo.MinCurveMarkersCount, GameInfo.MaxCurveMarkersCount)
             );
+            this._currentGapMultiplier = GameInfo.GapIncrementRate;
 
             if (Math.random() <= 0.5) {
               this._isLeftCurve = true;
@@ -179,20 +179,7 @@ export class MainScene extends Scene {
           }
         }
 
-        if (this._isCurveSpawnActive) {
-          if (this._isLeftCurve) {
-            this._currentRoadXPosition -= GameInfo.GapBetweenRoadMarker;
-          } else {
-            this._currentRoadXPosition += GameInfo.GapBetweenRoadMarker;
-          }
-
-          this._currentCurveMarkersCount -= 1;
-
-          if (this._currentCurveMarkersCount <= 0) {
-            this._isCurveSpawnActive = false;
-          }
-        }
-
+        this.checkAndCreateCurvedRoads();
         this.spawnRoadBoundaryPair(this._currentRoadXPosition, GameInfo.WorldDefaultY, this._maxZPosition);
       }
     }
@@ -267,6 +254,24 @@ export class MainScene extends Scene {
   //#endregion
 
   //#region Utility Functions
+
+  private checkAndCreateCurvedRoads() {
+    if (this._isCurveSpawnActive) {
+      if (this._isLeftCurve) {
+        this._currentRoadXPosition -= GameInfo.GapBetweenRoadMarker * this._currentGapMultiplier;
+      } else {
+        this._currentRoadXPosition += GameInfo.GapBetweenRoadMarker * this._currentGapMultiplier;
+      }
+
+      this._currentCurveMarkersCount -= 1;
+      this._currentGapMultiplier += GameInfo.GapIncrementRate;
+      this._currentGapMultiplier = Math.min(this._currentGapMultiplier, 1);
+
+      if (this._currentCurveMarkersCount <= 0) {
+        this._isCurveSpawnActive = false;
+      }
+    }
+  }
 
   private spawnRoadBoundaryPair(x: number, y: number, z: number) {
     const leftMarker = new WorldObject3D(AssetManager.LineMarkerString, this._mainCamera);
