@@ -89,22 +89,20 @@ export class MainScene extends Scene {
   
     this.updateRoadMarkers(deltaTime);
     this.updatePlayerMovement(deltaTime);
+    this.updateCamera();
     this.checkCollisions();
-
-    console.log(this._roadMarkers[0].getObjectPosition().x , this._roadMarkers[2].getObjectPosition().x);
     this._mainCamera.update();
   }
 
   private updateCamera(){
 
-    
-    if (this._roadMarkers[0].getObjectPosition().x - this._roadMarkers[2].getObjectPosition().x < 0 ){
-      this._mainCamera.rotate(-0.001,new Phaser.Math.Vector3(0,1,0));
-  }else if(this._roadMarkers[0].getObjectPosition().x - this._roadMarkers[2].getObjectPosition().x > 0) {
-      this._mainCamera.rotate(0.001,new Phaser.Math.Vector3(0,1,0));
-  }
-  }
 
+    this._mainCamera.x =  this._mainCamera.x +
+    0.05 * (((this._roadMarkers[11].getObjectPosition().x + this._roadMarkers[10].getObjectPosition().x)/2) - this._mainCamera.x );
+    ;
+    console.log(this._roadMarkers[1].getObjectPosition().x,this._roadMarkers[0].getObjectPosition().x,this._mainCamera.x);
+    //this._mainCamera.y = (this._roadMarkers[0].getObjectPosition().x - this._roadMarkers[2].getObjectPosition().x)
+  }
   private updateRoadMarkers(deltaTime: number){
     for (let i = this._roadMarkers.length - 1; i >= 0; i--) {
       this._roadMarkers[i].update(deltaTime);
