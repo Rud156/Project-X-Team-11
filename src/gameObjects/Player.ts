@@ -1,5 +1,6 @@
 import { Types, Math } from 'phaser';
 import GameInfo from '../utils/GameInfo';
+import { WorldObject } from './WorldObject';
 
 export class Player {
   private _playerSprite: any;
@@ -14,7 +15,7 @@ export class Player {
 
   public create(x: number, y: number, z: number) {
     this._playerSprite = this._sceneCamera.create(x, y, z, this._assetName);
-    this._playerSprite.size = new Math.Vector2(5, 2);
+    this._playerSprite.size = new Math.Vector2(1, 1);
   }
 
   public update(deltaTime: number, keyboardControls: Types.Input.Keyboard.CursorKeys) {
@@ -24,7 +25,7 @@ export class Player {
       this._playerSprite.x += GameInfo.PlayerHorizontalSpeed * deltaTime;
     }
 
-    this._sceneCamera.x = this._playerSprite.x;
+    //this._sceneCamera.x = this._playerSprite.x;
   }
 
   public getPlayerPosition(): Math.Vector3 {
@@ -36,6 +37,6 @@ export class Player {
   }
 
   public getPlayerSize(): Math.Vector2 {
-    return this._playerSprite.size;
+    return new Math.Vector2(147,128);//this._playerSprite.size;
   }
 }

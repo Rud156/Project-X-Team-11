@@ -7,6 +7,10 @@ const LineMarkerString = 'LineMarker';
 const PhaserImage = './src/assets/phaser.png';
 const PhaserImageString = 'Phaser';
 
+
+const CarImage = './src/assets/Car.png'
+const CarImageString = 'Car'
+
 export default {
   WhitePixel,
   WhitePixelString,
@@ -16,4 +20,7 @@ export default {
 
   PhaserImage,
   PhaserImageString,
+
+  CarImage,
+  CarImageString,
 };

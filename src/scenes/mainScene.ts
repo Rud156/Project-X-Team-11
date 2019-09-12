@@ -43,6 +43,8 @@ export class MainScene extends Scene {
 
     this.load.image(AssetManager.LineMarkerString, AssetManager.LineMarker);
     this.load.image(AssetManager.WhitePixelString, AssetManager.WhitePixel);
+    this.load.image(AssetManager.CarImageString, AssetManager.CarImage);
+    
   }
 
   create() {
@@ -78,21 +80,32 @@ export class MainScene extends Scene {
   }
 
   private createPlayer(): void {
-    this._player = new Player(AssetManager.WhitePixelString, this._mainCamera);
-    this._player.create(this._currentRoadXPosition, 8, this._mainCamera.z - 10);
+    this._player = new Player(AssetManager.CarImageString, this._mainCamera);
+    this._player.create(this._currentRoadXPosition, 6, this._mainCamera.z-10);
   }
 
   update(time: number, delta: number) {
     const deltaTime = delta / 1000.0;
-
+  
     this.updateRoadMarkers(deltaTime);
     this.updatePlayerMovement(deltaTime);
     this.checkCollisions();
 
+    console.log(this._roadMarkers[0].getObjectPosition().x , this._roadMarkers[2].getObjectPosition().x);
     this._mainCamera.update();
   }
 
-  private updateRoadMarkers(deltaTime: number) {
+  private updateCamera(){
+
+    
+    if (this._roadMarkers[0].getObjectPosition().x - this._roadMarkers[2].getObjectPosition().x < 0 ){
+      this._mainCamera.rotate(-0.001,new Phaser.Math.Vector3(0,1,0));
+  }else if(this._roadMarkers[0].getObjectPosition().x - this._roadMarkers[2].getObjectPosition().x > 0) {
+      this._mainCamera.rotate(0.001,new Phaser.Math.Vector3(0,1,0));
+  }
+  }
+
+  private updateRoadMarkers(deltaTime: number){
     for (let i = this._roadMarkers.length - 1; i >= 0; i--) {
       this._roadMarkers[i].update(deltaTime);
 
