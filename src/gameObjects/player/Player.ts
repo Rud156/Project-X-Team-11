@@ -8,6 +8,8 @@ export class Player {
 
   private _sceneCamera: any;
 
+  //#region Creation
+
   constructor(assetName: string, camera: any) {
     this._assetName = assetName;
     this._sceneCamera = camera;
@@ -18,6 +20,10 @@ export class Player {
     this._playerSprite.size = new Math.Vector2(5, 2);
   }
 
+  //#endregion
+
+  //#region Update
+
   public update(deltaTime: number, currentSpeed: number, controlDirection: PlayerDirection) {
     if (controlDirection == PlayerDirection.Left) {
       this._playerSprite.x -= currentSpeed * deltaTime;
@@ -25,6 +31,10 @@ export class Player {
       this._playerSprite.x += currentSpeed * deltaTime;
     }
   }
+
+  //#endregion
+
+  //#region External Functions
 
   public setPlayerPosition(x: number, y: number, z: number): void {
     this._playerSprite.x = x;
@@ -43,4 +53,6 @@ export class Player {
   public getPlayerSize(): Math.Vector2 {
     return this._playerSprite.size;
   }
+
+  //#endregion
 }

@@ -5,6 +5,8 @@ export class GameOverScene extends Scene {
   private _playerScore: number;
   private _scoreText: GameObjects.Text;
 
+  //#region Creation
+
   constructor() {
     super({
       key: GameInfo.GameOverSceneName,
@@ -29,7 +31,13 @@ export class GameOverScene extends Scene {
       .setOrigin(0.5);
   }
 
+  //#endregion
+
+  //#region External Functions
+
   public setGameOverScore(score: number) {
     this._playerScore = score;
   }
+
+  //#endregion
 }

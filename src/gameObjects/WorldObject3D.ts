@@ -8,6 +8,8 @@ export class WorldObject3D {
 
   private _objectOutOfView: boolean;
 
+  //#region Creation
+
   constructor(assetName: string, camera: any) {
     this._sceneCamera = camera;
     this._assetName = assetName;
@@ -17,6 +19,10 @@ export class WorldObject3D {
     this._objectSprite = this._sceneCamera.create(x, y, initialZ, this._assetName);
   }
 
+  //#endregion
+
+  //#region Update
+
   public update(deltaTime: number, currentSpeed: number): void {
     this._objectSprite.z += currentSpeed * deltaTime;
 
@@ -24,6 +30,10 @@ export class WorldObject3D {
       this._objectOutOfView = true;
     }
   }
+
+  //#endregion
+
+  //#region External Functions
 
   public isObjectOutOfView(): boolean {
     return this._objectOutOfView;
@@ -48,4 +58,6 @@ export class WorldObject3D {
   public getObjectSize(): Math.Vector2 {
     return this._objectSprite.size;
   }
+
+  //#endregion
 }

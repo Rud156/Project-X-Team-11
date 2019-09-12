@@ -6,12 +6,18 @@ export class PlayerController {
   private _input: Input.InputPlugin;
   private _keyboardCursorKeys: Types.Input.Keyboard.CursorKeys;
 
+  //#region Creation
+
   constructor(input: Input.InputPlugin) {
     this._playerDirection = PlayerDirection.None;
     this._input = input;
 
     this._keyboardCursorKeys = input.keyboard.createCursorKeys();
   }
+
+  //#endregion
+
+  //#region Update
 
   public update(): void {
     if (this._keyboardCursorKeys.left.isDown) {
@@ -38,9 +44,15 @@ export class PlayerController {
     }
   }
 
+  //#endregion
+
+  //#region External Functions
+
   public get PlayerDirection(): PlayerDirection {
     return this._playerDirection;
   }
+
+  //#endregion
 }
 
 export enum PlayerDirection {

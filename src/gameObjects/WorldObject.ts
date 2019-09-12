@@ -17,6 +17,8 @@ export class WorldObject {
 
   private _objectOutOfView: boolean;
 
+  //#region Creation
+
   constructor(assetName: string, parentScene: Scene) {
     this._parentScene = parentScene;
     this._assetName = assetName;
@@ -37,6 +39,10 @@ export class WorldObject {
     this._objectSprite = this._parentScene.add.sprite(-GameInfo.ScreenWidth, -GameInfo.ScreenHeight, this._assetName);
   }
 
+  //#endregion
+
+  //#region Update
+
   public update(deltaTime: number): void {
     const positionX = this.getPositionX();
     const positionY = this.getPositionY();
@@ -52,6 +58,10 @@ export class WorldObject {
     this._objectSprite.scale = ExtensionFunctions.map(this._z, 0, GameInfo.HalfScreenWidth, 1, 0);
   }
 
+  //#endregion
+
+  //#region External Functions
+
   public isObjectOutOfView(): boolean {
     return this._objectOutOfView;
   }
@@ -63,6 +73,10 @@ export class WorldObject {
   public destroy(): void {
     this._objectSprite.destroy();
   }
+
+  //#endregion
+
+  //#region Utility Functions
 
   private getPositionX(): number {
     let positionX;
@@ -87,4 +101,6 @@ export class WorldObject {
 
     return positionY;
   }
+
+  //#endregion
 }

@@ -11,9 +11,15 @@ export class ObjectShaker {
 
   private _shakeOffset: Math.Vector3;
 
+  //#region Creation
+
   constructor() {
     this._shakeOffset = new Math.Vector3();
   }
+
+  //#endregion
+
+  //#region Update
 
   public update(deltaTime: number, currentX: number, currentY: number, currentZ: number): Math.Vector3 {
     if (this._shakeActive) {
@@ -38,6 +44,10 @@ export class ObjectShaker {
     return this._shakeOffset;
   }
 
+  //#endregion
+
+  //#region External Functions
+
   public startShaking(shakeTime: number, shakeMultiplierX: number, shakeMultiplierY: number, shakeMultiplierZ: number) {
     this._shakeActive = true;
     this._shakeTimer = shakeTime;
@@ -55,4 +65,6 @@ export class ObjectShaker {
   public IsShakingActive(): boolean {
     return this._shakeActive;
   }
+
+  //#endregion
 }

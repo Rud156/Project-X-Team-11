@@ -5,7 +5,7 @@ import { WorldObject3D } from '../gameObjects/WorldObject3D';
 import { Player } from '../gameObjects/player/Player';
 import ExtensionFunctions from '../utils/ExtensionFunctions';
 import CollisionUtils from '../utils/CollisionUtils';
-import { ObjectShaker } from '../camera/ObjectShaker';
+import { ObjectShaker } from '../common/ObjectShaker';
 import { PlayerController } from '../gameObjects/player/PlayerController';
 import { GameOverScene } from './GameOverScene';
 
@@ -35,6 +35,8 @@ export class MainScene extends Scene {
   private _playerScoreDisplay: GameObjects.Text;
 
   private _currentSpeed: number;
+
+  //#region Creation
 
   constructor() {
     super({
@@ -114,6 +116,10 @@ export class MainScene extends Scene {
       fill: '#ffffff',
     });
   }
+
+  //#endregion
+
+  //#region Update
 
   update(time: number, delta: number) {
     const deltaTime = delta / 1000.0;
@@ -246,6 +252,10 @@ export class MainScene extends Scene {
     this.createInitialRoadMarkers();
   }
 
+  //#endregion
+
+  //#region Utility Functions
+
   private spawnRoadBoundaryPair(x: number, y: number, z: number) {
     const leftMarker = new WorldObject3D(AssetManager.LineMarkerString, this._mainCamera);
     const rightMarker = new WorldObject3D(AssetManager.LineMarkerString, this._mainCamera);
@@ -256,4 +266,6 @@ export class MainScene extends Scene {
     this._roadMarkers.push(leftMarker);
     this._roadMarkers.push(rightMarker);
   }
+
+  //#endregion
 }
