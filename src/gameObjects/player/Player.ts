@@ -1,9 +1,10 @@
-import {  Math } from 'phaser';
+import { Math } from 'phaser';
 import { PlayerDirection } from './PlayerController';
 
 export class Player {
   private _playerSprite: any;
   private _assetName: string;
+  private _playerCustomSize: Math.Vector2;
 
   private _sceneCamera: any;
 
@@ -17,6 +18,7 @@ export class Player {
   public create(x: number, y: number, z: number) {
     this._playerSprite = this._sceneCamera.create(x, y, z, this._assetName);
     this._playerSprite.size = new Math.Vector2(1, 1);
+    this._playerCustomSize = new Math.Vector2(10, 7);
   }
 
   //#endregion
@@ -51,6 +53,10 @@ export class Player {
 
   public getPlayerSize(): Math.Vector2 {
     return this._playerSprite.size;
+  }
+
+  public getPlayerCustomSize(): Math.Vector2 {
+    return this._playerCustomSize;
   }
 
   //#endregion

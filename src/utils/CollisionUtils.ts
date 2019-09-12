@@ -31,10 +31,10 @@ const checkOverlappingCollision = (
   let xCollided = false;
   let yCollided = false;
 
-  console.log(`1 Size: ${object1Size.x} ${object1Size.y}`);
-  console.log(`2 Size: ${object2Size.x} ${object2Size.y}`);
-  console.log(`1 Position: ${object1Position.x}, ${object1Position.y}, ${object1Position.z}`);
-  console.log(`2 Position: ${object2Position.x}, ${object2Position.y}, ${object2Position.z}`);
+  // console.log(`1 Size: ${object1Size.x} ${object1Size.y}`);
+  // console.log(`2 Size: ${object2Size.x} ${object2Size.y}`);
+  // console.log(`1 Position: ${object1Position.x}, ${object1Position.y}, ${object1Position.z}`);
+  // console.log(`2 Position: ${object2Position.x}, ${object2Position.y}, ${object2Position.z}`);
 
   if (object1TopLeftCorner.x >= object2TopLeftCorner.x && object1TopLeftCorner.x <= object2BottomRightCorner.x) {
     xCollided = true;

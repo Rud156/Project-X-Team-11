@@ -11,7 +11,7 @@ const Background = './src/assets/Background.png';
 const BackgroundString = 'Background';
 
 
-const CarImage = './src/assets/Car.png'
+const CarImage = './src/assets/Car_1.png'
 const CarImageString = 'Car'
 
 export default {
@@ -21,7 +21,7 @@ export default {
   LineMarker,
   LineMarkerString,
 
-  PhaserImage,
+  PhaserImage, 
   PhaserImageString,
 
   Background,
