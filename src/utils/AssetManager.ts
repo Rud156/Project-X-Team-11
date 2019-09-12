@@ -10,6 +10,10 @@ const PhaserImageString = 'Phaser';
 const Background = './src/assets/Background.png';
 const BackgroundString = 'Background';
 
+
+const CarImage = './src/assets/Car.png'
+const CarImageString = 'Car'
+
 export default {
   WhitePixel,
   WhitePixelString,
@@ -22,4 +26,7 @@ export default {
 
   Background,
   BackgroundString,
+
+  CarImage,
+  CarImageString,
 };

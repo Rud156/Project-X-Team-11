@@ -27,7 +27,7 @@ const checkOverlappingCollision = (
 
   const object2TopLeftCorner = new Maths.Vector2(object2Position.x - object2Size.x / 2.0, object2Position.y - object2Size.y / 2.0);
   const object2BottomRightCorner = new Maths.Vector2(object2Position.x + object2Size.x / 2.0, object2Position.y + object2Size.x / 2.0);
-
+//console.log(object1TopLeftCorner.x,object2TopLeftCorner.x,object1TopLeftCorner.x,object2BottomRightCorner.x);
   let xCollided = false;
   let yCollided = false;
 

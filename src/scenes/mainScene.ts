@@ -61,6 +61,7 @@ export class MainScene extends Scene {
     this.load.image(AssetManager.LineMarkerString, AssetManager.LineMarker);
     this.load.image(AssetManager.WhitePixelString, AssetManager.WhitePixel);
     this.load.image(AssetManager.BackgroundString, AssetManager.Background);
+    this.load.image(AssetManager.CarImageString, AssetManager.CarImage);
   }
 
   create() {
@@ -138,12 +139,21 @@ export class MainScene extends Scene {
 
     this.updateRoadMarkers(deltaTime);
     this.updatePlayerMovement(deltaTime);
+    this.updateCamera();
     this.checkCollisions();
     this.updateCameras(deltaTime);
     this.updateOtherGameObjects(deltaTime);
   }
 
-  private updateRoadMarkers(deltaTime: number) {
+  private updateCamera(){
+    this._mainCamera.x =  this._mainCamera.x +
+    0.05 * (((this._roadMarkers[11].getObjectPosition().x + this._roadMarkers[10].getObjectPosition().x)/2) - this._mainCamera.x );
+    ;
+    console.log(this._roadMarkers[1].getObjectPosition().x,this._roadMarkers[0].getObjectPosition().x,this._mainCamera.x);
+    //this._mainCamera.y = (this._roadMarkers[0].getObjectPosition().x - this._roadMarkers[2].getObjectPosition().x)
+  }
+  
+  private updateRoadMarkers(deltaTime: number){
     for (let i = this._roadMarkers.length - 1; i >= 0; i--) {
       this._roadMarkers[i].update(deltaTime, this._currentSpeed);
 
