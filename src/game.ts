@@ -18,6 +18,9 @@ const config: Types.Core.GameConfig = {
       gravity: { y: 0 },
     },
   },
+  input: {
+    gamepad: true,
+  },
 };
 
 // game class

@@ -8,6 +8,8 @@ export class WorldObject3D {
 
   private _objectOutOfView: boolean;
 
+  //#region Creation
+
   constructor(assetName: string, camera: any) {
     this._sceneCamera = camera;
     this._assetName = assetName;
@@ -17,13 +19,21 @@ export class WorldObject3D {
     this._objectSprite = this._sceneCamera.create(x, y, initialZ, this._assetName);
   }
 
-  public update(deltaTime: number): void {
-    this._objectSprite.z += GameInfo.WorldMovementSpeed * deltaTime;
+  //#endregion
+
+  //#region Update
+
+  public update(deltaTime: number, currentSpeed: number): void {
+    this._objectSprite.z += currentSpeed * deltaTime;
 
     if (this._objectSprite.z > this._sceneCamera.z + GameInfo.DistanceRemoveBehindCamera) {
       this._objectOutOfView = true;
     }
   }
+
+  //#endregion
+
+  //#region External Functions
 
   public isObjectOutOfView(): boolean {
     return this._objectOutOfView;
@@ -37,8 +47,8 @@ export class WorldObject3D {
     this._sceneCamera.remove(this._objectSprite);
   }
 
-  public getObjectPosition(): Math.Vector3 {
-    return new Math.Vector3(this._objectSprite.x, this._objectSprite.y, this._objectSprite.z);
+  public getObjectPosition(): Math.Vector4 {
+    return this._objectSprite.position;
   }
 
   public getObjectScale(): Math.Vector2 {
@@ -48,4 +58,6 @@ export class WorldObject3D {
   public getObjectSize(): Math.Vector2 {
     return this._objectSprite.size;
   }
+
+  //#endregion
 }
