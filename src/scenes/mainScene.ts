@@ -12,6 +12,9 @@ import { GameOverScene } from './GameOverScene';
 export class MainScene extends Scene {
   private _testKey: Input.Keyboard.Key;
 
+  private _sky: GameObjects.Image;
+  private _horizon: GameObjects.Image;
+
   private _roadMarkers: Array<WorldObject3D>;
   private _roadObjectsRemoved: number;
   private _maxZPosition: number;
@@ -58,6 +61,8 @@ export class MainScene extends Scene {
 
     this.load.image(AssetManager.LineMarkerString, AssetManager.LineMarker);
     this.load.image(AssetManager.WhitePixelString, AssetManager.WhitePixel);
+    this.load.image(AssetManager.BackgroundString, AssetManager.Background);
+    this.load.image(AssetManager.HorizonString, AssetManager.Horizon);
   }
 
   create() {
@@ -115,6 +120,14 @@ export class MainScene extends Scene {
       font: '20px Courier',
       fill: '#ffffff',
     });
+
+    this._sky = this.add
+      .image(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight, AssetManager.BackgroundString)
+      .setDepth(-5000)
+      .setDisplaySize(GameInfo.ScreenWidth, GameInfo.ScreenHeight)
+      .setSize(GameInfo.ScreenWidth, GameInfo.ScreenHeight);
+
+    this._horizon = this.add.image(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight, AssetManager.HorizonString).setDepth(-4000);
   }
 
   //#endregion
@@ -151,7 +164,8 @@ export class MainScene extends Scene {
         // TODO: This is a very hacky method to spawn curved path
         // Need to change this later on...
         if (!this._isCurveSpawnActive) {
-          const randomValue = Math.random();
+          let randomValue = Math.random();
+          randomValue = 10;
 
           if (randomValue <= GameInfo.CurvedRoadSpawnProbability) {
             this._isCurveSpawnActive = true;
