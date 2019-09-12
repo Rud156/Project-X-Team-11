@@ -7,6 +7,7 @@ export class WorldObject3D {
   private _sceneCamera: any;
 
   private _objectOutOfView: boolean;
+  private _unProjectedPosition: Math.Vector4;
 
   //#region Creation
 
@@ -17,6 +18,7 @@ export class WorldObject3D {
 
   public create(x: number, y: number, initialZ: number): void {
     this._objectSprite = this._sceneCamera.create(x, y, initialZ, this._assetName);
+    this._unProjectedPosition = new Math.Vector4();
   }
 
   //#endregion
@@ -57,6 +59,14 @@ export class WorldObject3D {
 
   public getObjectSize(): Math.Vector2 {
     return this._objectSprite.size;
+  }
+
+  public getUnProjectedVector(): Math.Vector4 {
+    return this._unProjectedPosition;
+  }
+
+  public setUnProjectedVector(unProjectedVector: Math.Vector4) {
+    this._unProjectedPosition = unProjectedVector;
   }
 
   //#endregion

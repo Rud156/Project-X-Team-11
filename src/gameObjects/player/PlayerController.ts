@@ -48,6 +48,10 @@ export class PlayerController {
 
   //#region External Functions
 
+  public resetController() {
+    this._playerDirection = PlayerDirection.None;
+  }
+
   public get PlayerDirection(): PlayerDirection {
     return this._playerDirection;
   }
