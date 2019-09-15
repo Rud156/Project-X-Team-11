@@ -10,6 +10,9 @@ const PhaserImageString = 'Phaser';
 const Background = './src/assets/Textures/Background.png';
 const BackgroundString = 'Background';
 
+const StartPage = './src/assets/Textures/StartPage.png';
+const StartPageString = 'StartPage';
+
 const CarImage = './src/assets/Textures/Car_1.png';
 const CarImageString = 'Car';
 
@@ -18,6 +21,9 @@ const ExplosionAudioString = 'Explosion';
 
 const BackgroundMusic = './src/assets/Audio/Background.mp3';
 const BackgroundMusicString = 'Background';
+
+const WebFont = '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js';
+const WebFontString = 'WebFont';
 
 export default {
   WhitePixel,
@@ -32,6 +38,9 @@ export default {
   Background,
   BackgroundString,
 
+  StartPage,
+  StartPageString,
+
   CarImage,
   CarImageString,
 
@@ -40,4 +49,7 @@ export default {
 
   BackgroundMusic,
   BackgroundMusicString,
+
+  WebFont,
+  WebFontString,
 };

@@ -84,7 +84,7 @@ export class MainScene extends Scene {
     this.load.audio(AssetManager.ExplosionAudioString, [AssetManager.ExplosionAudio]);
     this.load.audio(AssetManager.BackgroundMusicString, [AssetManager.BackgroundMusic]);
 
-    this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
+    this.load.script(AssetManager.WebFontString, AssetManager.WebFont);
   }
 
   create() {

@@ -40,6 +40,7 @@ const CameraRotationLerpAmount = 750;
 const CameraMovementLerpAmount = 7;
 
 // Scenes
+const HomeSceneName = 'HomeScene';
 const MainSceneName = 'MainScene';
 const GameOverSceneName = 'GameOverScene';
 
@@ -78,6 +79,7 @@ export default {
   CameraRotationLerpAmount,
   CameraMovementLerpAmount,
 
+  HomeSceneName,
   MainSceneName,
   GameOverSceneName,
 };
