@@ -13,7 +13,7 @@ const DistanceRemoveBehindCamera = 5;
 const SpeedIncrementRate = 1;
 
 // Player
-const PlayerMaxLives = 3;
+const PlayerMaxLives = 99;
 const PlayerInitialYPosition = 20;
 const PlayerZCameraOffset = -10;
 const PlayerBlinkRate = 7;

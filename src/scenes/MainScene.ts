@@ -1,4 +1,4 @@
-import { Scene, Types, Input, GameObjects, Math as Maths, Geom } from 'phaser';
+import { Scene, Types, Input, GameObjects, Math as Maths, Geom, Sound } from 'phaser';
 import AssetManager from '../utils/AssetManager';
 import GameInfo from '../utils/GameInfo';
 import { WorldObject3D } from '../gameObjects/WorldObject3D';
@@ -17,6 +17,15 @@ export class MainScene extends Scene {
   private _sky: GameObjects.Image;
 
   private _objectBlinkerManager: ObjectBlinkerManager;
+
+  private _explosionSound: Sound.BaseSound;
+  private _backgroundMusic: Sound.BaseSound;
+
+  private _webFontConfig: {
+    google: {
+      families: ['Cute Font'];
+    };
+  };
 
   private _car: GameObjects.Sprite;
   private _carRectangle: Geom.Rectangle;
@@ -71,6 +80,11 @@ export class MainScene extends Scene {
     this.load.image(AssetManager.WhitePixelString, AssetManager.WhitePixel);
     this.load.image(AssetManager.BackgroundString, AssetManager.Background);
     this.load.image(AssetManager.CarImageString, AssetManager.CarImage);
+
+    this.load.audio(AssetManager.ExplosionAudioString, [AssetManager.ExplosionAudio]);
+    this.load.audio(AssetManager.BackgroundMusicString, [AssetManager.BackgroundMusic]);
+
+    this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
   }
 
   create() {
@@ -78,6 +92,7 @@ export class MainScene extends Scene {
     this.createInitialRoadMarkers();
     this.createPlayer();
     this.createOtherSceneItem();
+    this.createSounds();
 
     this._currentSpeed = GameInfo.WorldMovementSpeed;
     this._testKey = this.input.keyboard.addKey(Input.Keyboard.KeyCodes.X);
@@ -125,11 +140,11 @@ export class MainScene extends Scene {
     this._playerLives = GameInfo.PlayerMaxLives;
 
     this._playerScoreDisplay = this.add.text(10, 10, '', {
-      font: '20px Courier',
+      font: '20px Cute Font',
       fill: '#ffffff',
     });
     this._playerLivesDisplay = this.add.text(GameInfo.ScreenWidth - 100, 10, `Lives: ${this._playerLives}`, {
-      font: '20px Courier',
+      font: '20px Cute Font',
       fill: '#ffffff',
     });
 
@@ -141,6 +156,18 @@ export class MainScene extends Scene {
 
     this._objectBlinkerManager = new ObjectBlinkerManager();
     this._objectBlinkerManager.create();
+  }
+
+  private createSounds(): void {
+    this._explosionSound = this.sound.add(AssetManager.ExplosionAudioString, {
+      volume: 0.5,
+    });
+
+    this._backgroundMusic = this.sound.add(AssetManager.BackgroundMusicString, {
+      loop: true,
+      volume: 0.7,
+    });
+    this._backgroundMusic.play();
   }
 
   //#endregion
@@ -225,8 +252,7 @@ export class MainScene extends Scene {
       if (this._carRectangle.contains(screenPosition.x, screenPosition.y)) {
         this._playerLives -= 1;
         if (this._playerLives <= 0) {
-          this.scene.switch(GameInfo.GameOverSceneName);
-          (this.scene.get(GameInfo.GameOverSceneName) as GameOverScene).setGameOverScore(this._playerScore);
+          this.cleanUpAndSwitchScene();
         } else {
           this._playerLivesDisplay.setText(`Lives: ${this._playerLives}`);
           this._cameraShaker.startShaking(0.5, 1, 0.3, 0);
@@ -239,6 +265,8 @@ export class MainScene extends Scene {
           GameInfo.PlayerBlinkCount,
           false
         );
+
+        this._explosionSound.play();
       }
     }
   }
@@ -321,6 +349,11 @@ export class MainScene extends Scene {
 
     this._roadMarkers.push(leftMarker);
     this._roadMarkers.push(rightMarker);
+  }
+
+  private cleanUpAndSwitchScene() {
+    this.scene.switch(GameInfo.GameOverSceneName);
+    (this.scene.get(GameInfo.GameOverSceneName) as GameOverScene).setGameOverScore(this._playerScore);
   }
 
   //#endregion

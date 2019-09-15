@@ -1,18 +1,23 @@
-const WhitePixel = './src/assets/White Pixel.png';
+const WhitePixel = './src/assets/Textures/White Pixel.png';
 const WhitePixelString = 'WhitePixel';
 
-const LineMarker = './src/assets/Line Marker.png';
+const LineMarker = './src/assets/Textures/Line Marker.png';
 const LineMarkerString = 'LineMarker';
 
-const PhaserImage = './src/assets/phaser.png';
+const PhaserImage = './src/assets/Textures/phaser.png';
 const PhaserImageString = 'Phaser';
 
-const Background = './src/assets/Background.png';
+const Background = './src/assets/Textures/Background.png';
 const BackgroundString = 'Background';
 
+const CarImage = './src/assets/Textures/Car_1.png';
+const CarImageString = 'Car';
 
-const CarImage = './src/assets/Car_1.png'
-const CarImageString = 'Car'
+const ExplosionAudio = './src/assets/Audio/CrashSound.mp3';
+const ExplosionAudioString = 'Explosion';
+
+const BackgroundMusic = './src/assets/Audio/Background.mp3';
+const BackgroundMusicString = 'Background';
 
 export default {
   WhitePixel,
@@ -21,7 +26,7 @@ export default {
   LineMarker,
   LineMarkerString,
 
-  PhaserImage, 
+  PhaserImage,
   PhaserImageString,
 
   Background,
@@ -29,4 +34,10 @@ export default {
 
   CarImage,
   CarImageString,
+
+  ExplosionAudio,
+  ExplosionAudioString,
+
+  BackgroundMusic,
+  BackgroundMusicString,
 };
