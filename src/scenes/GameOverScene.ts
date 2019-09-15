@@ -19,7 +19,6 @@ export class GameOverScene extends Scene {
 
   create() {
     this.createText();
-
     this._spaceBar = this.input.keyboard.addKey(Input.Keyboard.KeyCodes.SPACE);
   }
 

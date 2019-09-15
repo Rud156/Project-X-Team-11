@@ -16,6 +16,8 @@ const SpeedIncrementRate = 1;
 const PlayerMaxLives = 3;
 const PlayerInitialYPosition = 20;
 const PlayerZCameraOffset = -10;
+const PlayerBlinkRate = 7;
+const PlayerBlinkCount = 5;
 
 // Collision
 const CheckCollisionZLimit = 3;
@@ -57,6 +59,8 @@ export default {
   PlayerMaxLives,
   PlayerInitialYPosition,
   PlayerZCameraOffset,
+  PlayerBlinkRate,
+  PlayerBlinkCount,
 
   CheckCollisionZLimit,
 

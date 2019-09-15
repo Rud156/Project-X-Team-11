@@ -8,12 +8,15 @@ import CollisionUtils from '../utils/CollisionUtils';
 import { ObjectShaker } from '../common/ObjectShaker';
 import { PlayerController, PlayerDirection } from '../gameObjects/player/PlayerController';
 import { GameOverScene } from './GameOverScene';
+import { ObjectBlinkerManager } from '../managers/ObjectBlinkerManager';
 
 export class MainScene extends Scene {
   private _testKey: Input.Keyboard.Key;
   private _keyboardCursorKeys: Types.Input.Keyboard.CursorKeys;
 
   private _sky: GameObjects.Image;
+
+  private _objectBlinkerManager: ObjectBlinkerManager;
 
   private _car: GameObjects.Sprite;
   private _carRectangle: Geom.Rectangle;
@@ -135,6 +138,9 @@ export class MainScene extends Scene {
       .setDepth(-5000)
       .setDisplaySize(GameInfo.ScreenWidth, GameInfo.ScreenHeight)
       .setSize(GameInfo.ScreenWidth, GameInfo.ScreenHeight);
+
+    this._objectBlinkerManager = new ObjectBlinkerManager();
+    this._objectBlinkerManager.create();
   }
 
   //#endregion
@@ -154,6 +160,8 @@ export class MainScene extends Scene {
 
     this.updatePlayerMovement(deltaTime);
     this.updateCameras(deltaTime);
+
+    this._objectBlinkerManager.update(deltaTime);
   }
 
   private updateRoadMarkers(deltaTime: number) {
@@ -216,16 +224,21 @@ export class MainScene extends Scene {
 
       if (this._carRectangle.contains(screenPosition.x, screenPosition.y)) {
         this._playerLives -= 1;
-
         if (this._playerLives <= 0) {
           this.scene.switch(GameInfo.GameOverSceneName);
           (this.scene.get(GameInfo.GameOverSceneName) as GameOverScene).setGameOverScore(this._playerScore);
         } else {
           this._playerLivesDisplay.setText(`Lives: ${this._playerLives}`);
-
           this._cameraShaker.startShaking(0.5, 1, 0.3, 0);
           this.resetScreen();
         }
+
+        this._objectBlinkerManager.addItemToFlash(
+          this._player.getPlayerGameObject(),
+          GameInfo.PlayerBlinkRate,
+          GameInfo.PlayerBlinkCount,
+          false
+        );
       }
     }
   }
@@ -274,6 +287,7 @@ export class MainScene extends Scene {
     }
 
     this._playerController.resetController();
+    this._objectBlinkerManager.reset();
   }
 
   //#endregion

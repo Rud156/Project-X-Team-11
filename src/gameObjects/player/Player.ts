@@ -59,5 +59,9 @@ export class Player {
     return this._playerCustomSize;
   }
 
+  public getPlayerGameObject(): any {
+    return this._playerSprite.gameObject;
+  }
+
   //#endregion
 }
