@@ -20,13 +20,13 @@ export class HomeScene extends Scene {
     });
   }
 
-  public preload(): void {
+  preload(): void {
     this.load.image(AssetManager.StartPageString, AssetManager.StartPage);
     this.load.audio(AssetManager.BackgroundMusicString, [AssetManager.BackgroundMusic]);
     this.load.script(AssetManager.WebFontString, AssetManager.WebFont);
   }
 
-  public create(): void {
+  create(): void {
     this.add.sprite(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight, AssetManager.StartPageString);
     this._startText = this.add.text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight, 'Press SPACE tp Start', {
       font: '30px Cute Font',
@@ -44,7 +44,7 @@ export class HomeScene extends Scene {
 
   //#region Update
 
-  public update(time: number, delta: number) {
+  update(time: number, delta: number) {
     if (Phaser.Input.Keyboard.JustDown(this._spaceBar)) {
       this.scene.switch(GameInfo.MainSceneName);
     }

@@ -21,12 +21,6 @@ export class MainScene extends Scene {
   private _explosionSound: Sound.BaseSound;
   private _backgroundMusic: Sound.BaseSound;
 
-  private _webFontConfig: {
-    google: {
-      families: ['Cute Font'];
-    };
-  };
-
   private _car: GameObjects.Sprite;
   private _carRectangle: Geom.Rectangle;
 

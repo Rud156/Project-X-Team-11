@@ -1,6 +1,7 @@
 import { Scene, GameObjects, Input } from 'phaser';
 import GameInfo from '../utils/GameInfo';
 import { MainScene } from './MainScene';
+import AssetManager from '../utils/AssetManager';
 
 export class GameOverScene extends Scene {
   private _playerScore: number;
@@ -17,6 +18,10 @@ export class GameOverScene extends Scene {
     });
   }
 
+  preload() {
+    this.load.script(AssetManager.WebFontString, AssetManager.WebFont);
+  }
+
   create() {
     this.createText();
     this._spaceBar = this.input.keyboard.addKey(Input.Keyboard.KeyCodes.SPACE);
@@ -25,7 +30,7 @@ export class GameOverScene extends Scene {
   private createText() {
     this.add
       .text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight - 50, 'GAME OVER', {
-        font: '20px Courier',
+        font: '20px Cute Font',
         fill: '#ffffff',
       })
       .setAlign('center')
@@ -33,7 +38,7 @@ export class GameOverScene extends Scene {
 
     this._scoreText = this.add
       .text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight + 50, `Score: ${Math.floor(this._playerScore)}`, {
-        font: '30px Courier',
+        font: '30px Cute Font',
         fill: '#ffffff',
       })
       .setAlign('center')
@@ -41,7 +46,7 @@ export class GameOverScene extends Scene {
 
     this._resetText = this.add
       .text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight + 100, 'Press SPACE to Reset', {
-        font: '30px Courier',
+        font: '30px Cute Font',
         fill: '#ffffff',
       })
       .setAlign('center')
@@ -56,7 +61,7 @@ export class GameOverScene extends Scene {
     if (Input.Keyboard.JustDown(this._spaceBar)) {
       // (this.scene.get(GameInfo.MainSceneName) as MainScene).resetScreen(true);
       // this.scene.switch(GameInfo.MainSceneName);
-      
+
       // TODO: Fix This...
       location.href = location.href;
     }
