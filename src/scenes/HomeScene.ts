@@ -49,8 +49,6 @@ export class HomeScene extends Scene {
           .setAlign('center')
           .setOrigin(0.5);
         this._objectBlinkerManager.addItemToFlash(this._startText, 3, -1, true);
-
-        console.log(this._startText);
       },
     });
 
