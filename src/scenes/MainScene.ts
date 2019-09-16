@@ -185,7 +185,7 @@ export class MainScene extends Scene {
 
     this.updateRoadMarkers(deltaTime);
     this.updatePlayerMovement(deltaTime);
-    this.checkCollisions();
+    // this.checkCollisions();
     this.updateCameras(deltaTime);
     this.updateOtherGameObjects(deltaTime);
 
