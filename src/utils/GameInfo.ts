@@ -35,12 +35,11 @@ const ScoreIncrementRate = 10;
 // Camera
 const CameraDefaultY = 0;
 const CameraDefaultZ = 300;
-const CameraSeeDistanceAmount = 500;
 const CameraRotationLerpAmount = 750;
 const CameraMovementLerpAmount = 7;
 
 // Scrolling Background
-const ScrollingBackgroundMultiplier = 50;
+const ScrollingBackgroundSpeed = 50;
 const ScrollingBackgroundCount = 3;
 
 // Scenes
@@ -79,11 +78,10 @@ export default {
 
   CameraDefaultY,
   CameraDefaultZ,
-  CameraSeeDistanceAmount,
   CameraRotationLerpAmount,
   CameraMovementLerpAmount,
 
-  ScrollingBackgroundSpeed: ScrollingBackgroundMultiplier,
+  ScrollingBackgroundSpeed,
   ScrollingBackgroundCount,
 
   HomeSceneName,

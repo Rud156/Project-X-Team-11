@@ -30,24 +30,27 @@ export class GameOverScene extends Scene {
   private createText() {
     this.add
       .text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight - 50, 'GAME OVER', {
-        font: '20px Cute Font',
+        fontFamily: 'Courier',
         fill: '#ffffff',
+        fontSize: 20,
       })
       .setAlign('center')
       .setOrigin(0.5);
 
     this._scoreText = this.add
       .text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight + 50, `Score: ${Math.floor(this._playerScore)}`, {
-        font: '30px Cute Font',
+        fontFamily: 'Courier',
         fill: '#ffffff',
+        fontSize: 30,
       })
       .setAlign('center')
       .setOrigin(0.5);
 
     this._resetText = this.add
       .text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight + 100, 'Press SPACE to Reset', {
-        font: '30px Cute Font',
+        fontFamily: 'Courier',
         fill: '#ffffff',
+        fontSize: 30,
       })
       .setAlign('center')
       .setOrigin(0.5);

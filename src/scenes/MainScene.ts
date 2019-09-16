@@ -4,7 +4,6 @@ import GameInfo from '../utils/GameInfo';
 import { WorldObject3D } from '../gameObjects/WorldObject3D';
 import { Player } from '../gameObjects/player/Player';
 import ExtensionFunctions from '../utils/ExtensionFunctions';
-import CollisionUtils from '../utils/CollisionUtils';
 import { ObjectShaker } from '../common/ObjectShaker';
 import { PlayerController, PlayerDirection } from '../gameObjects/player/PlayerController';
 import { GameOverScene } from './GameOverScene';
@@ -16,7 +15,6 @@ export class MainScene extends Scene {
   private _keyboardCursorKeys: Types.Input.Keyboard.CursorKeys;
 
   private _scrollingBackground: ScrollingBackgroundManager;
-
   private _objectBlinkerManager: ObjectBlinkerManager;
 
   private _explosionSound: Sound.BaseSound;
@@ -135,12 +133,14 @@ export class MainScene extends Scene {
     this._playerLives = GameInfo.PlayerMaxLives;
 
     this._playerScoreDisplay = this.add.text(10, 10, '', {
-      font: '20px Cute Font',
+      fontFamily: 'Courier',
       fill: '#ffffff',
+      fontSize: 20,
     });
     this._playerLivesDisplay = this.add.text(GameInfo.ScreenWidth - 100, 10, `Lives: ${this._playerLives}`, {
-      font: '20px Cute Font',
+      fontFamily: 'Courier',
       fill: '#ffffff',
+      fontSize: 20,
     });
 
     this._scrollingBackground = new ScrollingBackgroundManager(this);
@@ -174,11 +174,10 @@ export class MainScene extends Scene {
     this._currentSpeed = Math.min(this._currentSpeed, GameInfo.WorldMovementMaxSpeed);
 
     this.updateRoadMarkers(deltaTime);
-    // this.checkCollisions();
-    this.updateOtherGameObjects(deltaTime);
-
     this.updatePlayerMovement(deltaTime);
+    this.checkCollisions();
     this.updateCameras(deltaTime);
+    this.updateOtherGameObjects(deltaTime);
 
     this._objectBlinkerManager.update(deltaTime);
     this._scrollingBackground.update(deltaTime, this._mainCamera.x);

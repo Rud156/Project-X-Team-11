@@ -22,7 +22,7 @@ const ExplosionAudioString = 'Explosion';
 const BackgroundMusic = './src/assets/Audio/Background.mp3';
 const BackgroundMusicString = 'Background';
 
-const WebFont = '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js';
+const WebFont = 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js';
 const WebFontString = 'WebFont';
 
 export default {

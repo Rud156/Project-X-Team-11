@@ -35,11 +35,13 @@ export class HomeScene extends Scene {
 
     this._startText = this.add
       .text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight, 'Press SPACE to Start', {
-        font: '30px Cute Font',
+        fontFamily: 'Courier',
         fill: '#ffffff',
+        fontSize: 30,
       })
       .setAlign('center')
       .setOrigin(0.5);
+
     this._objectBlinkerManager.addItemToFlash(this._startText, 3, -1, true);
 
     this._spaceBar = this.input.keyboard.addKey(Input.Keyboard.KeyCodes.SPACE);
