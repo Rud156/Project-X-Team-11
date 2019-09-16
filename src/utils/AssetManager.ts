@@ -16,6 +16,8 @@ const StartPageString = 'StartPage';
 const CarImage = './src/assets/Textures/Car_1.png';
 const CarImageString = 'Car';
 
+const BaseRoad = "./src/assets/Textures/Base road.png"
+
 const ExplosionAudio = './src/assets/Audio/CrashSound.mp3';
 const ExplosionAudioString = 'Explosion';
 
