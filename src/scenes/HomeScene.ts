@@ -23,7 +23,6 @@ export class HomeScene extends Scene {
   preload(): void {
     this.load.image(AssetManager.StartPageString, AssetManager.StartPage);
     this.load.audio(AssetManager.BackgroundMusicString, [AssetManager.BackgroundMusic]);
-    this.load.script(AssetManager.WebFontString, AssetManager.WebFont);
   }
 
   create(): void {
@@ -33,16 +32,27 @@ export class HomeScene extends Scene {
     this._objectBlinkerManager = new ObjectBlinkerManager();
     this._objectBlinkerManager.create();
 
-    this._startText = this.add
-      .text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight, 'Press SPACE to Start', {
-        fontFamily: 'Courier',
-        fill: '#ffffff',
-        fontSize: 30,
-      })
-      .setAlign('center')
-      .setOrigin(0.5);
+    //@ts-ignore
+    window.WebFont.load({
+      google: {
+        families: [AssetManager.DefaultFontName],
+      },
+      active: () => {
+        console.log('WebFont Loaded. HomeScreen');
 
-    this._objectBlinkerManager.addItemToFlash(this._startText, 3, -1, true);
+        this._startText = this.add
+          .text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight, 'Press SPACE to Start', {
+            fontFamily: AssetManager.DefaultFontName,
+            fill: '#ffffff',
+            fontSize: 40,
+          })
+          .setAlign('center')
+          .setOrigin(0.5);
+        this._objectBlinkerManager.addItemToFlash(this._startText, 3, -1, true);
+
+        console.log(this._startText);
+      },
+    });
 
     this._spaceBar = this.input.keyboard.addKey(Input.Keyboard.KeyCodes.SPACE);
 

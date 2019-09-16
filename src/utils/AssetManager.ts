@@ -24,6 +24,7 @@ const BackgroundMusicString = 'Background';
 
 const WebFont = 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js';
 const WebFontString = 'WebFont';
+const DefaultFontName = 'Cute Font';
 
 export default {
   WhitePixel,
@@ -52,4 +53,5 @@ export default {
 
   WebFont,
   WebFontString,
+  DefaultFontName,
 };

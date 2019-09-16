@@ -28,32 +28,42 @@ export class GameOverScene extends Scene {
   }
 
   private createText() {
-    this.add
-      .text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight - 50, 'GAME OVER', {
-        fontFamily: 'Courier',
-        fill: '#ffffff',
-        fontSize: 20,
-      })
-      .setAlign('center')
-      .setOrigin(0.5);
+    //@ts-ignore
+    window.WebFont.load({
+      google: {
+        families: [AssetManager.DefaultFontName],
+      },
+      active: () => {
+        console.log('WebFont Loaded. GameOverScreen');
 
-    this._scoreText = this.add
-      .text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight + 50, `Score: ${Math.floor(this._playerScore)}`, {
-        fontFamily: 'Courier',
-        fill: '#ffffff',
-        fontSize: 30,
-      })
-      .setAlign('center')
-      .setOrigin(0.5);
+        this.add
+          .text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight - 50, 'GAME OVER', {
+            fontFamily: AssetManager.DefaultFontName,
+            fill: '#ffffff',
+            fontSize: 35,
+          })
+          .setAlign('center')
+          .setOrigin(0.5);
 
-    this._resetText = this.add
-      .text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight + 100, 'Press SPACE to Reset', {
-        fontFamily: 'Courier',
-        fill: '#ffffff',
-        fontSize: 30,
-      })
-      .setAlign('center')
-      .setOrigin(0.5);
+        this._scoreText = this.add
+          .text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight + 50, `Score: ${Math.floor(this._playerScore)}`, {
+            fontFamily: AssetManager.DefaultFontName,
+            fill: '#ffffff',
+            fontSize: 40,
+          })
+          .setAlign('center')
+          .setOrigin(0.5);
+
+        this._resetText = this.add
+          .text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight + 100, 'Press SPACE to Reset', {
+            fontFamily: AssetManager.DefaultFontName,
+            fill: '#ffffff',
+            fontSize: 40,
+          })
+          .setAlign('center')
+          .setOrigin(0.5);
+      },
+    });
   }
 
   //#endregion

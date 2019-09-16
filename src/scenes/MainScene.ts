@@ -132,15 +132,25 @@ export class MainScene extends Scene {
     this._playerScore = 0;
     this._playerLives = GameInfo.PlayerMaxLives;
 
-    this._playerScoreDisplay = this.add.text(10, 10, '', {
-      fontFamily: 'Courier',
-      fill: '#ffffff',
-      fontSize: 20,
-    });
-    this._playerLivesDisplay = this.add.text(GameInfo.ScreenWidth - 100, 10, `Lives: ${this._playerLives}`, {
-      fontFamily: 'Courier',
-      fill: '#ffffff',
-      fontSize: 20,
+    //@ts-ignore
+    window.WebFont.load({
+      google: {
+        families: [AssetManager.DefaultFontName],
+      },
+      active: () => {
+        console.log('WebFont Loaded. MainScreen');
+
+        this._playerScoreDisplay = this.add.text(10, 10, '', {
+          fontFamily: AssetManager.DefaultFontName,
+          fill: '#ffffff',
+          fontSize: 40,
+        });
+        this._playerLivesDisplay = this.add.text(GameInfo.ScreenWidth - 110, 10, `Lives: ${this._playerLives}`, {
+          fontFamily: AssetManager.DefaultFontName,
+          fill: '#ffffff',
+          fontSize: 40,
+        });
+      },
     });
 
     this._scrollingBackground = new ScrollingBackgroundManager(this);
@@ -273,7 +283,7 @@ export class MainScene extends Scene {
   }
 
   private updateOtherGameObjects(deltaTime: number): void {
-    this._playerScoreDisplay.setText(`Score: ${Math.floor(this._playerScore)}`);
+    this._playerScoreDisplay && this._playerScoreDisplay.setText(`Score: ${Math.floor(this._playerScore)}`);
   }
 
   //#endregion
