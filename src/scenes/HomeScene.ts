@@ -27,17 +27,28 @@ export class HomeScene extends Scene {
   }
 
   create(): void {
-    this.add.sprite(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight, AssetManager.StartPageString);
-    this._startText = this.add.text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight, 'Press SPACE tp Start', {
-      font: '30px Cute Font',
-      fill: '#ffffff',
-    });
+    this._startBackground = this.add.sprite(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight, AssetManager.StartPageString);
+    this._startBackground.setDisplaySize(GameInfo.ScreenWidth, GameInfo.ScreenHeight);
 
     this._objectBlinkerManager = new ObjectBlinkerManager();
     this._objectBlinkerManager.create();
 
-    this._spaceBar = this.input.keyboard.addKey(Input.Keyboard.KeyCodes.SPACE);
+    this._startText = this.add
+      .text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight, 'Press SPACE to Start', {
+        font: '30px Cute Font',
+        fill: '#ffffff',
+      })
+      .setAlign('center')
+      .setOrigin(0.5);
     this._objectBlinkerManager.addItemToFlash(this._startText, 3, -1, true);
+
+    this._spaceBar = this.input.keyboard.addKey(Input.Keyboard.KeyCodes.SPACE);
+
+    this._backgroundMusic = this.sound.add(AssetManager.BackgroundMusicString, {
+      loop: true,
+      volume: 0.7,
+    });
+    this._backgroundMusic.play();
   }
 
   //#endregion
@@ -45,9 +56,14 @@ export class HomeScene extends Scene {
   //#region Update
 
   update(time: number, delta: number) {
+    const deltaTime = delta / 1000.0;
+
     if (Phaser.Input.Keyboard.JustDown(this._spaceBar)) {
       this.scene.switch(GameInfo.MainSceneName);
+      this._backgroundMusic.stop();
     }
+
+    this._objectBlinkerManager.update(deltaTime);
   }
 
   //#endregion

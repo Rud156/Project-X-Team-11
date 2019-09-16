@@ -254,7 +254,7 @@ export class MainScene extends Scene {
         }
 
         this._objectBlinkerManager.addItemToFlash(
-          this._player.getPlayerGameObject(),
+          this._car,
           GameInfo.PlayerBlinkRate,
           GameInfo.PlayerBlinkCount,
           false

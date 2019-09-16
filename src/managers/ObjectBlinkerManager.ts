@@ -17,8 +17,8 @@ class BlinkerItem {
     this.blinkCount = blinkCount;
     this.isInfinite = isInfinite;
 
-    this._currentAlpha = 0;
-    this._isFlashIn = true;
+    this._currentAlpha = 1;
+    this._isFlashIn = false;
   }
 
   public get CurrentAlpha(): number {
@@ -46,6 +46,7 @@ export class ObjectBlinkerManager {
 
   public create(): void {
     this._displayItems = [];
+    this._currentIndex = 0;
   }
 
   //#endregion
@@ -61,14 +62,14 @@ export class ObjectBlinkerManager {
         if (blinkerItem.CurrentAlpha >= 1) {
           blinkerItem.IsFlashIn = false;
           blinkerItem.CurrentAlpha = 1;
+
+          blinkerItem.blinkCount -= 1;
         }
       } else {
         blinkerItem.CurrentAlpha -= blinkerItem.blinkRate * deltaTime;
         if (blinkerItem.CurrentAlpha <= 0) {
           blinkerItem.IsFlashIn = true;
           blinkerItem.CurrentAlpha = 0;
-
-          blinkerItem.blinkCount -= 1;
         }
       }
 
