@@ -7,7 +7,7 @@ const LineMarkerString = 'LineMarker';
 const PhaserImage = './src/assets/Textures/phaser.png';
 const PhaserImageString = 'Phaser';
 
-const Background = './src/assets/Textures/Background.png';
+const Background = './src/assets/Textures/BackgroundSeamless.png';
 const BackgroundString = 'Background';
 
 const StartPage = './src/assets/Textures/StartPage.png';

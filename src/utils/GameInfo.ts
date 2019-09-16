@@ -39,6 +39,10 @@ const CameraSeeDistanceAmount = 500;
 const CameraRotationLerpAmount = 750;
 const CameraMovementLerpAmount = 7;
 
+// Scrolling Background
+const ScrollingBackgroundMultiplier = 50;
+const ScrollingBackgroundCount = 3;
+
 // Scenes
 const HomeSceneName = 'HomeScene';
 const MainSceneName = 'MainScene';
@@ -78,6 +82,9 @@ export default {
   CameraSeeDistanceAmount,
   CameraRotationLerpAmount,
   CameraMovementLerpAmount,
+
+  ScrollingBackgroundSpeed: ScrollingBackgroundMultiplier,
+  ScrollingBackgroundCount,
 
   HomeSceneName,
   MainSceneName,

@@ -9,12 +9,13 @@ import { ObjectShaker } from '../common/ObjectShaker';
 import { PlayerController, PlayerDirection } from '../gameObjects/player/PlayerController';
 import { GameOverScene } from './GameOverScene';
 import { ObjectBlinkerManager } from '../managers/ObjectBlinkerManager';
+import { ScrollingBackgroundManager } from '../managers/ScrollingBackgroundManager';
 
 export class MainScene extends Scene {
   private _testKey: Input.Keyboard.Key;
   private _keyboardCursorKeys: Types.Input.Keyboard.CursorKeys;
 
-  private _sky: GameObjects.Image;
+  private _scrollingBackground: ScrollingBackgroundManager;
 
   private _objectBlinkerManager: ObjectBlinkerManager;
 
@@ -142,11 +143,8 @@ export class MainScene extends Scene {
       fill: '#ffffff',
     });
 
-    this._sky = this.add
-      .image(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight, AssetManager.BackgroundString)
-      .setDepth(-5000)
-      .setDisplaySize(GameInfo.ScreenWidth, GameInfo.ScreenHeight)
-      .setSize(GameInfo.ScreenWidth, GameInfo.ScreenHeight);
+    this._scrollingBackground = new ScrollingBackgroundManager(this);
+    this._scrollingBackground.create(AssetManager.BackgroundString);
 
     this._objectBlinkerManager = new ObjectBlinkerManager();
     this._objectBlinkerManager.create();
@@ -176,13 +174,14 @@ export class MainScene extends Scene {
     this._currentSpeed = Math.min(this._currentSpeed, GameInfo.WorldMovementMaxSpeed);
 
     this.updateRoadMarkers(deltaTime);
-    this.checkCollisions();
+    // this.checkCollisions();
     this.updateOtherGameObjects(deltaTime);
 
     this.updatePlayerMovement(deltaTime);
     this.updateCameras(deltaTime);
 
     this._objectBlinkerManager.update(deltaTime);
+    this._scrollingBackground.update(deltaTime, this._mainCamera.x);
   }
 
   private updateRoadMarkers(deltaTime: number) {
@@ -253,12 +252,7 @@ export class MainScene extends Scene {
           this.resetScreen();
         }
 
-        this._objectBlinkerManager.addItemToFlash(
-          this._car,
-          GameInfo.PlayerBlinkRate,
-          GameInfo.PlayerBlinkCount,
-          false
-        );
+        this._objectBlinkerManager.addItemToFlash(this._car, GameInfo.PlayerBlinkRate, GameInfo.PlayerBlinkCount, false);
 
         this._explosionSound.play();
       }
