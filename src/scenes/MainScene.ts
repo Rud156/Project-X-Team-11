@@ -55,6 +55,10 @@ export class MainScene extends Scene {
 
   private _currentSpeed: number;
 
+  private _curveGradient: number;
+  private _maxCurveGradient: number;
+  private _sharpCurveIndex:number;
+
   //#region Creation
 
   constructor() {
@@ -72,6 +76,10 @@ export class MainScene extends Scene {
     this._isLeftCurve = false;
 
     this._currentRoadXPosition = 0;
+
+    this._curveGradient = 1;
+    this._maxCurveGradient = 0;
+    this._sharpCurveIndex=0;
   }
 
   preload(): void {
@@ -233,6 +241,9 @@ export class MainScene extends Scene {
             this._currentCurveMarkersCount = Math.floor(
               ExtensionFunctions.randomInRange(GameInfo.MinCurveMarkersCount, GameInfo.MaxCurveMarkersCount)
             );
+
+            this._sharpCurveIndex = 1;//ExtensionFunctions.randomInRange(1,3);
+            this._maxCurveGradient = this._currentCurveMarkersCount/2;
             this._currentGapMultiplier = GameInfo.GapIncrementRate;
 
             if (Math.random() <= 0.5) {
@@ -259,7 +270,7 @@ export class MainScene extends Scene {
       if (road.getData().isWetRoad) {
         const roadPosition = road.getObjectPosition();
         if (roadPosition.z >= this._mainCamera.z - GameInfo.DistanceRemoveBehindCamera) {
-          playerTouchedWetRoad = true;
+        // playerTouchedWetRoad = true;
         }
       }
 
@@ -420,6 +431,9 @@ export class MainScene extends Scene {
 
     this._playerController.resetController();
     this._objectBlinkerManager.reset();
+    this._curveGradient = 1;
+    this._maxCurveGradient = 0;
+    this._sharpCurveIndex = 1;
   }
 
   //#endregion
@@ -429,17 +443,25 @@ export class MainScene extends Scene {
   private checkAndCreateCurvedRoads() {
     if (this._isCurveSpawnActive) {
       if (this._isLeftCurve) {
-        this._currentRoadXPosition -= GameInfo.GapBetweenRoadMarker * this._currentGapMultiplier;
+        this._currentRoadXPosition -= this._curveGradient;
       } else {
-        this._currentRoadXPosition += GameInfo.GapBetweenRoadMarker * this._currentGapMultiplier;
+        this._currentRoadXPosition += this._curveGradient;
       }
 
       this._currentCurveMarkersCount -= 1;
-      this._currentGapMultiplier += GameInfo.GapIncrementRate;
-      this._currentGapMultiplier = Math.min(this._currentGapMultiplier, 1);
+
+      if(this._maxCurveGradient<this._currentCurveMarkersCount){
+        this._curveGradient += this._sharpCurveIndex;
+      }else{
+        this._curveGradient -= this._sharpCurveIndex;
+      }
+      //this._currentGapMultiplier += GameInfo.GapIncrementRate;
+      //this._currentGapMultiplier = Math.min(this._currentGapMultiplier, 1);
 
       if (this._currentCurveMarkersCount <= 0) {
         this._isCurveSpawnActive = false;
+        this._curveGradient = 1;
+        this._maxCurveGradient = 0;
       }
     }
   }
