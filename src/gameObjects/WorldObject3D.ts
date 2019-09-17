@@ -9,11 +9,15 @@ export class WorldObject3D {
   private _objectOutOfView: boolean;
   private _unProjectedPosition: Math.Vector4;
 
+  private _data: any;
+
   //#region Creation
 
   constructor(assetName: string, camera: any) {
     this._sceneCamera = camera;
     this._assetName = assetName;
+
+    this._data = {};
   }
 
   public create(x: number, y: number, initialZ: number): void {
@@ -36,6 +40,30 @@ export class WorldObject3D {
   //#endregion
 
   //#region External Functions
+
+  public setSize(x: number, y: number) {
+    this._objectSprite.size = { x, y };
+  }
+
+  public setTint(color: number) {
+    this._objectSprite.gameObject.setTint(color);
+  }
+
+  public setData(data: any) {
+    this._data = data;
+  }
+
+  public getData(): any {
+    return this._data;
+  }
+
+  public get flipX(): boolean {
+    return this._objectSprite.gameObject.flipX;
+  }
+
+  public set flipX(v: boolean) {
+    this._objectSprite.gameObject.flipX = v;
+  }
 
   public isObjectOutOfView(): boolean {
     return this._objectOutOfView;
