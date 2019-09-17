@@ -22,6 +22,7 @@ export class MainScene extends Scene {
 
   private _car: GameObjects.Sprite;
   private _carRectangle: Geom.Rectangle;
+  private _prevControlDirection: PlayerDirection;
 
   private _roadMarkers: Array<WorldObject3D>;
   private _roads: Array<WorldObject3D>;
@@ -75,6 +76,7 @@ export class MainScene extends Scene {
     this.load.image(AssetManager.WhitePixelString, AssetManager.WhitePixel);
     this.load.image(AssetManager.BackgroundString, AssetManager.Background);
     this.load.image(AssetManager.CarImageString, AssetManager.CarImage);
+    this.load.image(AssetManager.CarTurnImageString, AssetManager.CarTurnImage);
     this.load.image(AssetManager.BaseRoadString, AssetManager.BaseRoad);
 
     this.load.audio(AssetManager.ExplosionAudioString, [AssetManager.ExplosionAudio]);
@@ -265,6 +267,21 @@ export class MainScene extends Scene {
 
     this._mainCamera.y = GameInfo.CameraDefaultY;
     this._mainCamera.z = GameInfo.CameraDefaultZ;
+
+    if (this._prevControlDirection !== this._playerController.PlayerDirection) {
+      this._car.flipX = false;
+
+      if (this._playerController.PlayerDirection === PlayerDirection.Left) {
+        this._car.setTexture(AssetManager.CarTurnImageString);
+        this._car.flipX = true;
+      } else if (this._playerController.PlayerDirection === PlayerDirection.Right) {
+        this._car.setTexture(AssetManager.CarTurnImageString);
+      } else {
+        this._car.setTexture(AssetManager.CarImageString);
+      }
+    }
+
+    this._prevControlDirection = this._playerController.PlayerDirection;
   }
 
   private checkCollisions(): void {
@@ -296,9 +313,9 @@ export class MainScene extends Scene {
   private updateCameras(deltaTime: number): void {
     const shakePosition = this._cameraShaker.update(deltaTime, this._mainCamera.x, this._mainCamera.y, this._mainCamera.z);
 
-    if (this._playerController.PlayerDirection == PlayerDirection.Left) {
+    if (this._playerController.PlayerDirection === PlayerDirection.Left) {
       this._lookAtLerp -= (this._currentSpeed + GameInfo.CameraRotationLerpAmount) * deltaTime;
-    } else if (this._playerController.PlayerDirection == PlayerDirection.Right) {
+    } else if (this._playerController.PlayerDirection === PlayerDirection.Right) {
       this._lookAtLerp += (this._currentSpeed + GameInfo.CameraRotationLerpAmount) * deltaTime;
     }
 

@@ -16,6 +16,9 @@ const StartPageString = 'StartPage';
 const CarImage = './src/assets/Textures/Base car.png';
 const CarImageString = 'Car';
 
+const CarTurnImage = './src/assets/Textures/Car turning right.png';
+const CarTurnImageString = 'CarTurn';
+
 const BaseRoad = './src/assets/Textures/Base Road Perspective.png';
 const BaseRoadString = 'BaseRoad';
 
@@ -47,6 +50,9 @@ export default {
 
   CarImage,
   CarImageString,
+
+  CarTurnImage,
+  CarTurnImageString,
 
   BaseRoad,
   BaseRoadString,
