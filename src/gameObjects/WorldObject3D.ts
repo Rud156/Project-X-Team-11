@@ -9,11 +9,15 @@ export class WorldObject3D {
   private _objectOutOfView: boolean;
   private _unProjectedPosition: Math.Vector4;
 
+  private _data: any;
+
   //#region Creation
 
   constructor(assetName: string, camera: any) {
     this._sceneCamera = camera;
     this._assetName = assetName;
+
+    this._data = {};
   }
 
   public create(x: number, y: number, initialZ: number): void {
@@ -39,6 +43,14 @@ export class WorldObject3D {
 
   public setSize(x: number, y: number) {
     this._objectSprite.size = { x, y };
+  }
+
+  public setTint(color: number) {
+    this._objectSprite.gameObject.setTint(color);
+  }
+
+  public setData(data: any) {
+    this._data = data;
   }
 
   public isObjectOutOfView(): boolean {
