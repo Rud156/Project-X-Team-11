@@ -41,7 +41,7 @@ export class GameOverScene extends Scene {
           .text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight + 50, `Score: ${Math.floor(this._playerScore)}`, {
             fontFamily: AssetManager.DefaultFontName,
             fill: '#ffffff',
-            fontSize: 40,
+            fontSize: 30,
           })
           .setAlign('center')
           .setOrigin(0.5);
@@ -50,7 +50,7 @@ export class GameOverScene extends Scene {
           .text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight + 100, 'Press SPACE to Reset', {
             fontFamily: AssetManager.DefaultFontName,
             fill: '#ffffff',
-            fontSize: 40,
+            fontSize: 30,
           })
           .setAlign('center')
           .setOrigin(0.5);

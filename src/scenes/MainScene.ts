@@ -159,12 +159,12 @@ export class MainScene extends Scene {
         this._playerScoreDisplay = this.add.text(10, 10, '', {
           fontFamily: AssetManager.DefaultFontName,
           fill: '#ffffff',
-          fontSize: 40,
+          fontSize: 30,
         });
         this._playerLivesDisplay = this.add.text(GameInfo.ScreenWidth - 110, 10, `Lives: ${this._playerLives}`, {
           fontFamily: AssetManager.DefaultFontName,
           fill: '#ffffff',
-          fontSize: 40,
+          fontSize: 30,
         });
       },
     });

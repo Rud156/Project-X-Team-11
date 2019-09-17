@@ -45,12 +45,12 @@ export class HomeScene extends Scene {
           .text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight, 'Press SPACE to Start', {
             fontFamily: AssetManager.DefaultFontName,
             fill: '#ffffff',
-            fontSize: 40,
+            fontSize: 30,
           })
           .setAlign('center')
           .setOrigin(0.5);
 
-        // this._objectBlinkerManager.addItemToFlash(this._startText, 3, -1, true);
+        this._objectBlinkerManager.addItemToFlash(this._startText, 3, -1, true);
       },
     });
 
