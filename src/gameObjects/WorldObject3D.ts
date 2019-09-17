@@ -53,6 +53,14 @@ export class WorldObject3D {
     this._data = data;
   }
 
+  public get flipX(): boolean {
+    return this._objectSprite.gameObject.flipX;
+  }
+
+  public set flipX(v: boolean) {
+    this._objectSprite.gameObject.flipX = v;
+  }
+
   public isObjectOutOfView(): boolean {
     return this._objectOutOfView;
   }

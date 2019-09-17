@@ -23,6 +23,7 @@ export class HomeScene extends Scene {
   preload(): void {
     this.load.image(AssetManager.StartPageString, AssetManager.StartPage);
     this.load.audio(AssetManager.BackgroundMusicString, [AssetManager.BackgroundMusic]);
+    this.load.script(AssetManager.WebFontString, AssetManager.WebFont);
   }
 
   create(): void {

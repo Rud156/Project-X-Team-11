@@ -19,6 +19,7 @@ export class GameOverScene extends Scene {
   }
 
   preload() {
+    this.load.image(AssetManager.GameOverImageString, AssetManager.GameOverImage);
     this.load.script(AssetManager.WebFontString, AssetManager.WebFont);
   }
 
@@ -35,15 +36,6 @@ export class GameOverScene extends Scene {
       },
       active: () => {
         console.log('WebFont Loaded. GameOverScreen');
-
-        this.add
-          .text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight - 50, 'GAME OVER', {
-            fontFamily: AssetManager.DefaultFontName,
-            fill: '#ffffff',
-            fontSize: 35,
-          })
-          .setAlign('center')
-          .setOrigin(0.5);
 
         this._scoreText = this.add
           .text(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight + 50, `Score: ${Math.floor(this._playerScore)}`, {
@@ -64,6 +56,9 @@ export class GameOverScene extends Scene {
           .setOrigin(0.5);
       },
     });
+
+    const gameOverBackground = this.add.sprite(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight, AssetManager.GameOverImageString);
+    gameOverBackground.setDisplaySize(GameInfo.ScreenWidth, GameInfo.ScreenHeight);
   }
 
   //#endregion

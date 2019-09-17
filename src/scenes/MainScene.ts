@@ -31,7 +31,8 @@ export class MainScene extends Scene {
   private _maxZPosition: number;
 
   private _isWetRoadActive: boolean;
-  private _currentWetRoadCount;
+  private _currentWetRoadCount: number;
+  private _wetRoadMarkers: Array<WorldObject3D>;
 
   private _mainCamera: any; // 3D Camera
   private cameras3d: any; // Placeholder 3D Cameras
@@ -63,6 +64,7 @@ export class MainScene extends Scene {
 
     this._roadMarkers = [];
     this._roads = [];
+    this._wetRoadMarkers = [];
     this._roadObjectsRemoved = 0;
 
     this._isCurveSpawnActive = false;
@@ -81,6 +83,7 @@ export class MainScene extends Scene {
     this.load.image(AssetManager.CarImageString, AssetManager.CarImage);
     this.load.image(AssetManager.CarTurnImageString, AssetManager.CarTurnImage);
     this.load.image(AssetManager.BaseRoadString, AssetManager.BaseRoad);
+    this.load.image(AssetManager.WetRoadMarkerString, AssetManager.WetRoadMarker);
 
     this.load.audio(AssetManager.ExplosionAudioString, [AssetManager.ExplosionAudio]);
     this.load.audio(AssetManager.BackgroundMusicString, [AssetManager.BackgroundMusic]);
@@ -199,6 +202,7 @@ export class MainScene extends Scene {
 
       this.updateRoadMarkers(deltaTime);
       this.updateRoads(deltaTime);
+      this.updateWetRoadMarkers(deltaTime);
       this.updatePlayerMovement(deltaTime);
       // this.checkCollisions();
       this.updateCameras(deltaTime);
@@ -273,6 +277,8 @@ export class MainScene extends Scene {
           if (randomNumber <= GameInfo.WetRoadSpawnProbability) {
             this._isWetRoadActive = true;
             this._currentWetRoadCount = GameInfo.WetRoadCount;
+
+            this.addWetRoadMarker(this._currentRoadXPosition, GameInfo.WorldDefaultY, this._maxZPosition);
           }
         }
 
@@ -289,6 +295,18 @@ export class MainScene extends Scene {
     }
 
     this._playerController.setControlFlippedState(playerTouchedWetRoad);
+  }
+
+  private updateWetRoadMarkers(deltaTime: number) {
+    for (let i = this._wetRoadMarkers.length - 1; i >= 0; i--) {
+      const marker = this._wetRoadMarkers[i];
+      marker.update(deltaTime, this._currentSpeed);
+
+      if (marker.isObjectOutOfView()) {
+        this._wetRoadMarkers[i].destroy();
+        this._wetRoadMarkers.splice(i, 1);
+      }
+    }
   }
 
   private updatePlayerMovement(deltaTime: number): void {
@@ -421,6 +439,22 @@ export class MainScene extends Scene {
 
     this._roadMarkers.push(leftMarker);
     this._roadMarkers.push(rightMarker);
+  }
+
+  private addWetRoadMarker(x: number, y: number, z: number) {
+    const leftWetRoadMarker = new WorldObject3D(AssetManager.WetRoadMarkerString, this._mainCamera);
+    const rightWetRoadMarker = new WorldObject3D(AssetManager.WetRoadMarkerString, this._mainCamera);
+
+    leftWetRoadMarker.create(x - GameInfo.WetRoadMarkerDistanceFromRoad - GameInfo.WorldRoadWidth / 2.0, y, z);
+    rightWetRoadMarker.create(x + GameInfo.WetRoadMarkerDistanceFromRoad + GameInfo.WorldRoadWidth / 2.0, y, z);
+
+    leftWetRoadMarker.flipX = true;
+
+    leftWetRoadMarker.setSize(20, 20);
+    rightWetRoadMarker.setSize(20, 20);
+
+    this._wetRoadMarkers.push(leftWetRoadMarker);
+    this._wetRoadMarkers.push(rightWetRoadMarker);
   }
 
   private createAndAddRoad(x: number, y: number, z: number, isWetRoad: boolean = false) {

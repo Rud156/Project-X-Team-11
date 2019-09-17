@@ -6,7 +6,7 @@ const HalfScreenHeight = ScreenHeight / 2.0;
 
 // World Info
 const WorldMovementSpeed = 100;
-const WorldMovementMaxSpeed = 350;
+const WorldMovementMaxSpeed = 250;
 const WorldRoadWidth = 80;
 const WorldDefaultY = 20;
 const DistanceRemoveBehindCamera = 5;
@@ -32,6 +32,7 @@ const RoadYDistance = 50;
 const GapBetweenRoads = 5;
 const WetRoadCount = 50;
 const WetRoadSpawnProbability = 0.05;
+const WetRoadMarkerDistanceFromRoad = 30;
 
 // Scoring
 const ScoreIncrementRate = 10;
@@ -81,6 +82,7 @@ export default {
   GapBetweenRoads,
   WetRoadCount,
   WetRoadSpawnProbability,
+  WetRoadMarkerDistanceFromRoad,
 
   ScoreIncrementRate,
 

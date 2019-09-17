@@ -13,6 +13,9 @@ const BackgroundString = 'Background';
 const StartPage = './src/assets/Textures/StartPage.png';
 const StartPageString = 'StartPage';
 
+const GameOverImage = './src/assets/Textures/Gameover.png';
+const GameOverImageString = 'GameOver';
+
 const CarImage = './src/assets/Textures/Base car.png';
 const CarImageString = 'Car';
 
@@ -21,6 +24,9 @@ const CarTurnImageString = 'CarTurn';
 
 const BaseRoad = './src/assets/Textures/Base Road Perspective.png';
 const BaseRoadString = 'BaseRoad';
+
+const WetRoadMarker = './src/assets/Textures/Marker right.png';
+const WetRoadMarkerString = 'SideMarker';
 
 const ExplosionAudio = './src/assets/Audio/CrashSound.mp3';
 const ExplosionAudioString = 'Explosion';
@@ -48,6 +54,9 @@ export default {
   StartPage,
   StartPageString,
 
+  GameOverImage,
+  GameOverImageString,
+
   CarImage,
   CarImageString,
 
@@ -56,6 +65,9 @@ export default {
 
   BaseRoad,
   BaseRoadString,
+
+  WetRoadMarker,
+  WetRoadMarkerString,
 
   ExplosionAudio,
   ExplosionAudioString,
