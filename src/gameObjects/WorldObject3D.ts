@@ -53,6 +53,10 @@ export class WorldObject3D {
     this._data = data;
   }
 
+  public getData(): any {
+    return this._data;
+  }
+
   public get flipX(): boolean {
     return this._objectSprite.gameObject.flipX;
   }

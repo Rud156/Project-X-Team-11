@@ -140,7 +140,7 @@ export class MainScene extends Scene {
 
     this._playerController = new PlayerController(this.input);
 
-    this._car = this.add.sprite(GameInfo.HalfScreenWidth, GameInfo.ScreenHeight - 64, AssetManager.CarImageString);
+    this._car = this.add.sprite(GameInfo.HalfScreenWidth, GameInfo.ScreenHeight - 127, AssetManager.CarImageString);
     this._carRectangle = this._car.getBounds();
   }
 
@@ -203,14 +203,15 @@ export class MainScene extends Scene {
       this.updateRoadMarkers(deltaTime);
       this.updateRoads(deltaTime);
       this.updateWetRoadMarkers(deltaTime);
-      this.updatePlayerMovement(deltaTime);
-      // this.checkCollisions();
+      this.checkCollisions();
       this.updateCameras(deltaTime);
       this.updateOtherGameObjects(deltaTime);
 
       this._objectBlinkerManager.update(deltaTime);
       this._scrollingBackground.update(deltaTime, this._mainCamera.x);
     }
+
+    this.updatePlayerMovement(deltaTime);
   }
 
   private updateRoadMarkers(deltaTime: number) {
@@ -258,13 +259,11 @@ export class MainScene extends Scene {
       const road = this._roads[i];
       road.update(deltaTime, this._currentSpeed);
 
-      const position = road.getObjectPosition();
-      const screenPosition = road.getUnProjectedVector();
-      this._mainCamera.project(position, screenPosition);
-      road.setUnProjectedVector(screenPosition);
-
-      if (this._carRectangle.contains(screenPosition.x, screenPosition.y)) {
-        playerTouchedWetRoad = true;
+      if (road.getData().isWetRoad) {
+        const roadPosition = road.getObjectPosition();
+        if (roadPosition.z >= this._mainCamera.z) {
+          playerTouchedWetRoad = true;
+        }
       }
 
       if (road.isObjectOutOfView()) {

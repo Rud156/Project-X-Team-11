@@ -23,7 +23,7 @@ const PlayerBlinkCount = 5;
 const CheckCollisionZLimit = 3;
 
 // Road
-const CurvedRoadSpawnProbability = 0.05;
+const CurvedRoadSpawnProbability = 0.01;
 const MinCurveMarkersCount = 20;
 const MaxCurveMarkersCount = 30;
 const GapBetweenRoadMarker = 10;
