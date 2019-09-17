@@ -11,6 +11,7 @@ const WorldRoadWidth = 80;
 const WorldDefaultY = 20;
 const DistanceRemoveBehindCamera = 5;
 const SpeedIncrementRate = 1;
+const CrashWaitDelay = 3;
 
 // Player
 const PlayerMaxLives = 3;
@@ -48,7 +49,6 @@ const ScrollingBackgroundSpeed = 50;
 const ScrollingBackgroundCount = 3;
 
 // Scenes
-const LoadingSceneName = 'LoadingScene';
 const HomeSceneName = 'HomeScene';
 const MainSceneName = 'MainScene';
 const GameOverSceneName = 'GameOverScene';
@@ -65,6 +65,7 @@ export default {
   WorldDefaultY,
   DistanceRemoveBehindCamera,
   SpeedIncrementRate,
+  CrashWaitDelay,
 
   PlayerMaxLives,
   PlayerInitialYPosition,
@@ -95,7 +96,6 @@ export default {
   ScrollingBackgroundSpeed,
   ScrollingBackgroundCount,
 
-  LoadingSceneName,
   HomeSceneName,
   MainSceneName,
   GameOverSceneName,

@@ -67,11 +67,7 @@ export class GameOverScene extends Scene {
 
   public update(time: number, delta: number) {
     if (Input.Keyboard.JustDown(this._spaceBar)) {
-      // (this.scene.get(GameInfo.MainSceneName) as MainScene).resetScreen(true);
-      // this.scene.switch(GameInfo.MainSceneName);
-
-      // TODO: Fix This...
-      location.href = location.href;
+      this.scene.switch(GameInfo.HomeSceneName);
     }
   }
 
@@ -81,6 +77,10 @@ export class GameOverScene extends Scene {
 
   public setGameOverScore(score: number) {
     this._playerScore = score;
+
+    if (this._scoreText) {
+      this._scoreText.setText(`Score: ${Math.floor(this._playerScore)}`);
+    }
   }
 
   //#endregion

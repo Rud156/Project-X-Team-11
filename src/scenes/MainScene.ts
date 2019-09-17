@@ -10,6 +10,11 @@ import { GameOverScene } from './GameOverScene';
 import { ObjectBlinkerManager } from '../managers/ObjectBlinkerManager';
 import { ScrollingBackgroundManager } from '../managers/ScrollingBackgroundManager';
 
+enum MainSceneStatus {
+  Running,
+  Crashed,
+}
+
 export class MainScene extends Scene {
   private _testKey: Input.Keyboard.Key;
   private _keyboardCursorKeys: Types.Input.Keyboard.CursorKeys;
@@ -23,6 +28,7 @@ export class MainScene extends Scene {
   private _car: GameObjects.Sprite;
   private _carRectangle: Geom.Rectangle;
   private _prevControlDirection: PlayerDirection;
+  private _carShaker: ObjectShaker;
 
   private _roadMarkers: Array<WorldObject3D>;
   private _roads: Array<WorldObject3D>;
@@ -58,6 +64,9 @@ export class MainScene extends Scene {
   private _curveGradient: number;
   private _maxCurveGradient: number;
   private _sharpCurveIndex: number;
+
+  private _crashWaitDelay: number;
+  private _mainSceneStatus: MainSceneStatus;
 
   //#region Creation
 
@@ -111,6 +120,9 @@ export class MainScene extends Scene {
     this._currentSpeed = GameInfo.WorldMovementSpeed;
     this._testKey = this.input.keyboard.addKey(Input.Keyboard.KeyCodes.X);
     this._keyboardCursorKeys = this.input.keyboard.createCursorKeys();
+
+    this.setMainSceneState(MainSceneStatus.Running);
+    this._crashWaitDelay = GameInfo.CrashWaitDelay;
   }
 
   private createCamera(): void {
@@ -163,8 +175,7 @@ export class MainScene extends Scene {
     carRectangle.centerY = this._carRectangle.centerY;
 
     this._carRectangle = carRectangle;
-
-    // this.add.rectangle(carRectangle.centerX, carRectangle.centerY, carRectangle.width, carRectangle.height, 0xff0000, 0.5);
+    this._carShaker = new ObjectShaker();
   }
 
   private createOtherSceneItem(): void {
@@ -203,14 +214,14 @@ export class MainScene extends Scene {
 
   private createSounds(): void {
     this._explosionSound = this.sound.add(AssetManager.ExplosionAudioString, {
-      volume: 0.5,
+      volume: 1,
     });
 
     this._backgroundMusic = this.sound.add(AssetManager.BackgroundMusicString, {
       loop: true,
-      volume: 0.7,
+      volume: 0.5,
     });
-    this._backgroundMusic.play();
+    // this._backgroundMusic.play();
   }
 
   //#endregion
@@ -220,17 +231,30 @@ export class MainScene extends Scene {
   update(time: number, delta: number) {
     const deltaTime = delta / 1000.0;
 
-    this._playerScore += deltaTime * GameInfo.ScoreIncrementRate;
-    this._currentSpeed += GameInfo.ScoreIncrementRate * deltaTime;
-    this._currentSpeed = Math.min(this._currentSpeed, GameInfo.WorldMovementMaxSpeed);
+    if (Phaser.Input.Keyboard.JustDown(this._testKey)) {
+      this._cameraShaker.startShaking(1, 1, 1, 1);
+    }
 
-    this.updateRoadMarkers(deltaTime);
-    this.updateRoads(deltaTime);
-    this.updateWetRoadMarkers(deltaTime);
-    this.updatePlayerMovement(deltaTime);
-    this.checkCollisions();
+    if (this._mainSceneStatus === MainSceneStatus.Running) {
+      this._playerScore += deltaTime * GameInfo.ScoreIncrementRate;
+      this._currentSpeed += GameInfo.ScoreIncrementRate * deltaTime;
+      this._currentSpeed = Math.min(this._currentSpeed, GameInfo.WorldMovementMaxSpeed);
+
+      this.updateRoadMarkers(deltaTime);
+      this.updateRoads(deltaTime);
+      this.updateWetRoadMarkers(deltaTime);
+      this.updatePlayerMovement(deltaTime);
+      this.checkCollisions();
+      this.updateOtherGameObjects(deltaTime);
+    } else if (this._mainSceneStatus === MainSceneStatus.Crashed) {
+      this._crashWaitDelay -= deltaTime;
+      if (this._crashWaitDelay <= 0) {
+        this.cleanUpAndSwitchScene();
+      }
+    }
+
     this.updateCameras(deltaTime);
-    this.updateOtherGameObjects(deltaTime);
+    this.updateCarShake(deltaTime);
 
     this._objectBlinkerManager.update(deltaTime);
     this._scrollingBackground.update(deltaTime, this._mainCamera.x);
@@ -259,7 +283,7 @@ export class MainScene extends Scene {
               ExtensionFunctions.randomInRange(GameInfo.MinCurveMarkersCount, GameInfo.MaxCurveMarkersCount)
             );
 
-            this._sharpCurveIndex = 1; //ExtensionFunctions.randomInRange(1,3);
+            this._sharpCurveIndex = 1;
             this._maxCurveGradient = this._currentCurveMarkersCount / 2;
             this._currentGapMultiplier = GameInfo.GapIncrementRate;
 
@@ -337,12 +361,6 @@ export class MainScene extends Scene {
     this._playerController.update();
     this._player.update(deltaTime, this._currentSpeed, this._playerController.PlayerDirection);
 
-    const centerRoadPosition = (this._roadMarkers[2].getObjectPosition().x + this._roadMarkers[3].getObjectPosition().x) / 2.0;
-    this._mainCamera.x = Maths.Linear(this._mainCamera.x, centerRoadPosition, GameInfo.CameraMovementLerpAmount * deltaTime);
-
-    this._mainCamera.y = GameInfo.CameraDefaultY;
-    this._mainCamera.z = GameInfo.CameraDefaultZ;
-
     if (this._prevControlDirection !== this._playerController.PlayerDirection) {
       if (this._playerController.PlayerDirection === PlayerDirection.Left) {
         this._car.setTexture(AssetManager.CarTurnLeftImageString);
@@ -356,6 +374,13 @@ export class MainScene extends Scene {
     this._prevControlDirection = this._playerController.PlayerDirection;
   }
 
+  private updateCarShake(deltaTime: number) {
+    this._car.setPosition(GameInfo.HalfScreenWidth, GameInfo.ScreenHeight - 74);
+
+    const shakePosition = this._carShaker.update(deltaTime, this._car.x, this._car.y, 0);
+    this._car.setPosition(shakePosition.x, shakePosition.y, shakePosition.z);
+  }
+
   private checkCollisions(): void {
     for (let i = 0; i < this._roadMarkers.length; i++) {
       const roadMarker = this._roadMarkers[i];
@@ -367,11 +392,14 @@ export class MainScene extends Scene {
 
       if (this._carRectangle.contains(screenPosition.x, screenPosition.y)) {
         this._playerLives -= 1;
+
+        this._cameraShaker.startShaking(1, 1, 1, 1);
+        this._carShaker.startShaking(1, 10, 10, 0);
+
         if (this._playerLives <= 0) {
-          this.cleanUpAndSwitchScene();
+          this.setMainSceneState(MainSceneStatus.Crashed);
         } else {
           this._playerLivesDisplay.setText(`Lives: ${this._playerLives}`);
-          this._cameraShaker.startShaking(0.5, 1, 0.3, 0);
           this.resetScreen();
         }
 
@@ -383,6 +411,11 @@ export class MainScene extends Scene {
   }
 
   private updateCameras(deltaTime: number): void {
+    const centerRoadPosition = (this._roadMarkers[2].getObjectPosition().x + this._roadMarkers[3].getObjectPosition().x) / 2.0;
+    this._mainCamera.x = Maths.Linear(this._mainCamera.x, centerRoadPosition, GameInfo.CameraMovementLerpAmount * deltaTime);
+    this._mainCamera.y = GameInfo.CameraDefaultY;
+    this._mainCamera.z = GameInfo.CameraDefaultZ;
+
     const shakePosition = this._cameraShaker.update(deltaTime, this._mainCamera.x, this._mainCamera.y, this._mainCamera.z);
 
     if (this._playerController.PlayerDirection === PlayerDirection.Left) {
@@ -404,7 +437,7 @@ export class MainScene extends Scene {
 
   //#region External Functions
 
-  public resetScreen(resetLives: boolean = false) {
+  public resetScreen(completeSceneReset: boolean = false) {
     this._currentRoadXPosition = 0;
 
     for (let i = 0; i < this._roadMarkers.length; i++) {
@@ -438,16 +471,22 @@ export class MainScene extends Scene {
 
     this.createInitialRoadMarkers();
 
-    if (resetLives) {
-      this._playerLives = GameInfo.PlayerMaxLives;
-      this._playerLivesDisplay.setText(`Lives: ${this._playerLives}`);
-    }
-
     this._playerController.resetController();
-    this._objectBlinkerManager.reset();
+
     this._curveGradient = 1;
     this._maxCurveGradient = 0;
     this._sharpCurveIndex = 1;
+
+    if (completeSceneReset) {
+      this._playerLives = GameInfo.PlayerMaxLives;
+      this._playerLivesDisplay.setText(`Lives: ${this._playerLives}`);
+
+      this._currentSpeed = GameInfo.WorldMovementSpeed;
+      this._mainSceneStatus = MainSceneStatus.Running;
+
+      this._crashWaitDelay = GameInfo.CrashWaitDelay;
+      this._objectBlinkerManager.reset();
+    }
   }
 
   //#endregion
@@ -469,8 +508,6 @@ export class MainScene extends Scene {
       } else {
         this._curveGradient -= this._sharpCurveIndex;
       }
-      //this._currentGapMultiplier += GameInfo.GapIncrementRate;
-      //this._currentGapMultiplier = Math.min(this._currentGapMultiplier, 1);
 
       if (this._currentCurveMarkersCount <= 0) {
         this._isCurveSpawnActive = false;
@@ -520,7 +557,13 @@ export class MainScene extends Scene {
     this._roads.push(road);
   }
 
+  private setMainSceneState(mainSceneStatus: MainSceneStatus) {
+    this._mainSceneStatus = mainSceneStatus;
+  }
+
   private cleanUpAndSwitchScene() {
+    this.resetScreen(true);
+
     this.scene.switch(GameInfo.GameOverSceneName);
     (this.scene.get(GameInfo.GameOverSceneName) as GameOverScene).setGameOverScore(this._playerScore);
   }

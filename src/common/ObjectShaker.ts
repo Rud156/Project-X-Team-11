@@ -15,6 +15,7 @@ export class ObjectShaker {
 
   constructor() {
     this._shakeOffset = new Math.Vector3();
+    this._shakeActive = true;
   }
 
   //#endregion
@@ -33,6 +34,8 @@ export class ObjectShaker {
       if (this._shakeTimer <= 0) {
         this.stopShaking();
       }
+
+      console.log('Shaking Active');
     } else {
       this._shakeOffset.set(0, 0, 0);
     }
@@ -57,13 +60,13 @@ export class ObjectShaker {
     this._shakeMultiplierZ = shakeMultiplierZ;
   }
 
-  public stopShaking(): void {
+  //#endregion
+
+  //#region Utility Functions
+
+  private stopShaking(): void {
     this._shakeActive = false;
     this._shakeOffset.set(0, 0, 0);
-  }
-
-  public IsShakingActive(): boolean {
-    return this._shakeActive;
   }
 
   //#endregion

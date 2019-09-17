@@ -1,6 +1,5 @@
 import { GameObjects, Scene } from 'phaser';
 import GameInfo from '../utils/GameInfo';
-import AssetManager from '../utils/AssetManager';
 
 export class ScrollingBackgroundManager {
   private _backgroundImages: Array<GameObjects.Image>;
@@ -23,12 +22,12 @@ export class ScrollingBackgroundManager {
 
     for (let i = 0; i < GameInfo.ScrollingBackgroundCount; i++) {
       const backgroundImage = this._scene.add
-        .image(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight, AssetManager.BackgroundString)
+        .image(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight, assetString)
         .setDepth(-5000)
         .setDisplaySize(GameInfo.ScreenWidth, GameInfo.ScreenHeight)
         .setSize(GameInfo.ScreenWidth, GameInfo.ScreenHeight);
 
-      backgroundImage.setPosition(startingXPosition + i * GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight);
+      backgroundImage.setPosition(startingXPosition + i * GameInfo.ScreenWidth, GameInfo.HalfScreenHeight);
 
       this._backgroundImages.push(backgroundImage);
     }
@@ -53,7 +52,7 @@ export class ScrollingBackgroundManager {
     const startingXPosition = -Math.floor(GameInfo.ScrollingBackgroundCount / 2) * GameInfo.HalfScreenWidth;
 
     for (let i = 0; i < this._backgroundImages.length; i++) {
-      this._backgroundImages[i].x = startingXPosition + i * GameInfo.HalfScreenWidth;
+      this._backgroundImages[i].x = startingXPosition + i * GameInfo.ScreenWidth;
     }
   }
 
@@ -83,11 +82,11 @@ export class ScrollingBackgroundManager {
 
     if (lastElement.x < GameInfo.HalfScreenWidth) {
       this._backgroundImages.shift();
-      firstElement.x = lastElement.x + GameInfo.HalfScreenWidth;
+      firstElement.x = lastElement.x + GameInfo.ScreenWidth;
       this._backgroundImages.push(firstElement);
     } else if (firstElement.x > GameInfo.HalfScreenWidth) {
       this._backgroundImages.pop();
-      lastElement.x = firstElement.x - GameInfo.HalfScreenWidth;
+      lastElement.x = firstElement.x - GameInfo.ScreenWidth;
       this._backgroundImages.unshift(lastElement);
     }
   }
