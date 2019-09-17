@@ -396,6 +396,9 @@ export class MainScene extends Scene {
         this._cameraShaker.startShaking(1, 1, 1, 1);
         this._carShaker.startShaking(1, 10, 10, 0);
 
+        this._lookAtLerp = 0;
+        this._playerController.resetController();
+
         if (this._playerLives <= 0) {
           this.setMainSceneState(MainSceneStatus.Crashed);
         } else {
