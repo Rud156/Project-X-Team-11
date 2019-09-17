@@ -23,7 +23,7 @@ const PlayerBlinkCount = 5;
 const CheckCollisionZLimit = 3;
 
 // Road
-const CurvedRoadSpawnProbability = 0.01;
+const CurvedRoadSpawnProbability = 0.05;
 const MinCurveMarkersCount = 20;
 const MaxCurveMarkersCount = 30;
 const GapBetweenRoadMarker = 10;
@@ -48,6 +48,7 @@ const ScrollingBackgroundSpeed = 50;
 const ScrollingBackgroundCount = 3;
 
 // Scenes
+const LoadingSceneName = 'LoadingScene';
 const HomeSceneName = 'HomeScene';
 const MainSceneName = 'MainScene';
 const GameOverSceneName = 'GameOverScene';
@@ -94,6 +95,7 @@ export default {
   ScrollingBackgroundSpeed,
   ScrollingBackgroundCount,
 
+  LoadingSceneName,
   HomeSceneName,
   MainSceneName,
   GameOverSceneName,

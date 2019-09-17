@@ -195,23 +195,20 @@ export class MainScene extends Scene {
   update(time: number, delta: number) {
     const deltaTime = delta / 1000.0;
 
-    if (this._keyboardCursorKeys.space.isDown) {
-      this._playerScore += deltaTime * GameInfo.ScoreIncrementRate;
-      this._currentSpeed += GameInfo.ScoreIncrementRate * deltaTime;
-      this._currentSpeed = Math.min(this._currentSpeed, GameInfo.WorldMovementMaxSpeed);
+    this._playerScore += deltaTime * GameInfo.ScoreIncrementRate;
+    this._currentSpeed += GameInfo.ScoreIncrementRate * deltaTime;
+    this._currentSpeed = Math.min(this._currentSpeed, GameInfo.WorldMovementMaxSpeed);
 
-      this.updateRoadMarkers(deltaTime);
-      this.updateRoads(deltaTime);
-      this.updateWetRoadMarkers(deltaTime);
-      this.checkCollisions();
-      this.updateCameras(deltaTime);
-      this.updateOtherGameObjects(deltaTime);
-
-      this._objectBlinkerManager.update(deltaTime);
-      this._scrollingBackground.update(deltaTime, this._mainCamera.x);
-    }
-
+    this.updateRoadMarkers(deltaTime);
+    this.updateRoads(deltaTime);
+    this.updateWetRoadMarkers(deltaTime);
     this.updatePlayerMovement(deltaTime);
+    this.checkCollisions();
+    this.updateCameras(deltaTime);
+    this.updateOtherGameObjects(deltaTime);
+
+    this._objectBlinkerManager.update(deltaTime);
+    this._scrollingBackground.update(deltaTime, this._mainCamera.x);
   }
 
   private updateRoadMarkers(deltaTime: number) {
@@ -261,7 +258,7 @@ export class MainScene extends Scene {
 
       if (road.getData().isWetRoad) {
         const roadPosition = road.getObjectPosition();
-        if (roadPosition.z >= this._mainCamera.z) {
+        if (roadPosition.z >= this._mainCamera.z - GameInfo.DistanceRemoveBehindCamera) {
           playerTouchedWetRoad = true;
         }
       }
@@ -336,12 +333,12 @@ export class MainScene extends Scene {
 
   private checkCollisions(): void {
     for (let i = 0; i < this._roadMarkers.length; i++) {
-      const worldObject = this._roadMarkers[i];
+      const roadMarker = this._roadMarkers[i];
 
-      const position = worldObject.getObjectPosition();
-      const screenPosition = worldObject.getUnProjectedVector();
+      const position = roadMarker.getObjectPosition();
+      const screenPosition = roadMarker.getUnProjectedVector();
       this._mainCamera.project(position, screenPosition);
-      worldObject.setUnProjectedVector(screenPosition);
+      roadMarker.setUnProjectedVector(screenPosition);
 
       if (this._carRectangle.contains(screenPosition.x, screenPosition.y)) {
         this._playerLives -= 1;
@@ -390,12 +387,30 @@ export class MainScene extends Scene {
     }
     this._roadMarkers.length = 0;
 
+    for (let i = 0; i < this._roads.length; i++) {
+      this._roads[i].destroy();
+    }
+    this._roads.length = 0;
+
+    for (let i = 0; i < this._wetRoadMarkers.length; i++) {
+      this._wetRoadMarkers[i].destroy();
+    }
+    this._wetRoadMarkers.length = 0;
+
+    this._isWetRoadActive = false;
+    this._isCurveSpawnActive = false;
+
     this._player.setPlayerPosition(
       this._currentRoadXPosition,
       GameInfo.PlayerInitialYPosition,
       this._mainCamera.z + GameInfo.PlayerZCameraOffset
     );
+
+    this._lookAtLerp = 0;
     this._mainCamera.x = this._player.getPlayerPosition().x;
+    this._mainCamera.lookAt(this._mainCamera.x + this._lookAtLerp, 0, -GameInfo.CameraDefaultZ);
+    this._mainCamera.update();
+
     this.createInitialRoadMarkers();
 
     if (resetLives) {

@@ -57,6 +57,7 @@ export class PlayerController {
 
   public resetController() {
     this._playerDirection = PlayerDirection.None;
+    this._isControlsFlipped = false;
   }
 
   public get PlayerDirection(): PlayerDirection {

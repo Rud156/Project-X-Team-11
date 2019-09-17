@@ -5,6 +5,7 @@ import { MainScene } from './scenes/MainScene';
 import GameInfo from './utils/GameInfo';
 import { GameOverScene } from './scenes/GameOverScene';
 import { HomeScene } from './scenes/HomeScene';
+import { LoadingScene } from './scenes/LoadingScene';
 
 // main game configuration
 const config: Types.Core.GameConfig = {
