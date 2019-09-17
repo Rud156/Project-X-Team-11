@@ -57,7 +57,7 @@ export class MainScene extends Scene {
 
   private _curveGradient: number;
   private _maxCurveGradient: number;
-  private _sharpCurveIndex:number;
+  private _sharpCurveIndex: number;
 
   //#region Creation
 
@@ -79,7 +79,7 @@ export class MainScene extends Scene {
 
     this._curveGradient = 1;
     this._maxCurveGradient = 0;
-    this._sharpCurveIndex=0;
+    this._sharpCurveIndex = 0;
   }
 
   preload(): void {
@@ -88,8 +88,10 @@ export class MainScene extends Scene {
     this.load.image(AssetManager.LineMarkerString, AssetManager.LineMarker);
     this.load.image(AssetManager.WhitePixelString, AssetManager.WhitePixel);
     this.load.image(AssetManager.BackgroundString, AssetManager.Background);
+    this.load.image(AssetManager.MoonImageString, AssetManager.MoonImage);
     this.load.image(AssetManager.CarImageString, AssetManager.CarImage);
-    this.load.image(AssetManager.CarTurnImageString, AssetManager.CarTurnImage);
+    this.load.image(AssetManager.CarTurnRightImageString, AssetManager.CarTurnRightImage);
+    this.load.image(AssetManager.CarTurnLeftImageString, AssetManager.CarTurnLeftImage);
     this.load.image(AssetManager.BaseRoadString, AssetManager.BaseRoad);
     this.load.image(AssetManager.WetRoadMarkerString, AssetManager.WetRoadMarker);
 
@@ -148,8 +150,21 @@ export class MainScene extends Scene {
 
     this._playerController = new PlayerController(this.input);
 
-    this._car = this.add.sprite(GameInfo.HalfScreenWidth, GameInfo.ScreenHeight - 127, AssetManager.CarImageString);
+    this._car = this.add.sprite(GameInfo.HalfScreenWidth, GameInfo.ScreenHeight - 74, AssetManager.CarImageString);
     this._carRectangle = this._car.getBounds();
+    const carRectangle = new Geom.Rectangle();
+
+    const rectangleExpansion = 100;
+    carRectangle.width = this._carRectangle.width + rectangleExpansion;
+    carRectangle.height = this._carRectangle.height + rectangleExpansion;
+    carRectangle.x = this._carRectangle.x;
+    carRectangle.y = this._carRectangle.y;
+    carRectangle.centerX = this._carRectangle.centerX;
+    carRectangle.centerY = this._carRectangle.centerY;
+
+    this._carRectangle = carRectangle;
+
+    // this.add.rectangle(carRectangle.centerX, carRectangle.centerY, carRectangle.width, carRectangle.height, 0xff0000, 0.5);
   }
 
   private createOtherSceneItem(): void {
@@ -176,6 +191,8 @@ export class MainScene extends Scene {
         });
       },
     });
+
+    this.add.image(GameInfo.ScreenWidth - 200, 50, AssetManager.MoonImageString).setDepth(-4000);
 
     this._scrollingBackground = new ScrollingBackgroundManager(this);
     this._scrollingBackground.create(AssetManager.BackgroundString);
@@ -242,8 +259,8 @@ export class MainScene extends Scene {
               ExtensionFunctions.randomInRange(GameInfo.MinCurveMarkersCount, GameInfo.MaxCurveMarkersCount)
             );
 
-            this._sharpCurveIndex = 1;//ExtensionFunctions.randomInRange(1,3);
-            this._maxCurveGradient = this._currentCurveMarkersCount/2;
+            this._sharpCurveIndex = 1; //ExtensionFunctions.randomInRange(1,3);
+            this._maxCurveGradient = this._currentCurveMarkersCount / 2;
             this._currentGapMultiplier = GameInfo.GapIncrementRate;
 
             if (Math.random() <= 0.5) {
@@ -270,7 +287,7 @@ export class MainScene extends Scene {
       if (road.getData().isWetRoad) {
         const roadPosition = road.getObjectPosition();
         if (roadPosition.z >= this._mainCamera.z - GameInfo.DistanceRemoveBehindCamera) {
-        // playerTouchedWetRoad = true;
+          playerTouchedWetRoad = true;
         }
       }
 
@@ -327,13 +344,10 @@ export class MainScene extends Scene {
     this._mainCamera.z = GameInfo.CameraDefaultZ;
 
     if (this._prevControlDirection !== this._playerController.PlayerDirection) {
-      this._car.flipX = false;
-
       if (this._playerController.PlayerDirection === PlayerDirection.Left) {
-        this._car.setTexture(AssetManager.CarTurnImageString);
-        this._car.flipX = true;
+        this._car.setTexture(AssetManager.CarTurnLeftImageString);
       } else if (this._playerController.PlayerDirection === PlayerDirection.Right) {
-        this._car.setTexture(AssetManager.CarTurnImageString);
+        this._car.setTexture(AssetManager.CarTurnRightImageString);
       } else {
         this._car.setTexture(AssetManager.CarImageString);
       }
@@ -450,9 +464,9 @@ export class MainScene extends Scene {
 
       this._currentCurveMarkersCount -= 1;
 
-      if(this._maxCurveGradient<this._currentCurveMarkersCount){
+      if (this._maxCurveGradient < this._currentCurveMarkersCount) {
         this._curveGradient += this._sharpCurveIndex;
-      }else{
+      } else {
         this._curveGradient -= this._sharpCurveIndex;
       }
       //this._currentGapMultiplier += GameInfo.GapIncrementRate;

@@ -10,6 +10,9 @@ const PhaserImageString = 'Phaser';
 const Background = './src/assets/Textures/BackgroundSeamless.png';
 const BackgroundString = 'Background';
 
+const MoonImage = './src/assets/Textures/Moon.png';
+const MoonImageString = 'Moon';
+
 const StartPage = './src/assets/Textures/StartPage.png';
 const StartPageString = 'StartPage';
 
@@ -19,8 +22,11 @@ const GameOverImageString = 'GameOver';
 const CarImage = './src/assets/Textures/Base car.png';
 const CarImageString = 'Car';
 
-const CarTurnImage = './src/assets/Textures/Car turning right.png';
-const CarTurnImageString = 'CarTurn';
+const CarTurnRightImage = './src/assets/Textures/Car turning right.png';
+const CarTurnRightImageString = 'CarTurnRight';
+
+const CarTurnLeftImage = './src/assets/Textures/Car turning left.png';
+const CarTurnLeftImageString = 'CarTurnLeft';
 
 const BaseRoad = './src/assets/Textures/Base Road Perspective.png';
 const BaseRoadString = 'BaseRoad';
@@ -51,6 +57,9 @@ export default {
   Background,
   BackgroundString,
 
+  MoonImage,
+  MoonImageString,
+
   StartPage,
   StartPageString,
 
@@ -60,8 +69,11 @@ export default {
   CarImage,
   CarImageString,
 
-  CarTurnImage,
-  CarTurnImageString,
+  CarTurnRightImage,
+  CarTurnRightImageString,
+
+  CarTurnLeftImage,
+  CarTurnLeftImageString,
 
   BaseRoad,
   BaseRoadString,
