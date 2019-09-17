@@ -11,6 +11,8 @@ const WorldRoadWidth = 80;
 const WorldDefaultY = 20;
 const DistanceRemoveBehindCamera = 5;
 const SpeedIncrementRate = 1;
+const RoadYDistance = 50;
+const GapBetweenRoads = 5;
 
 // Player
 const PlayerMaxLives = 3;
@@ -59,6 +61,8 @@ export default {
   WorldDefaultY,
   DistanceRemoveBehindCamera,
   SpeedIncrementRate,
+  RoadYDistance,
+  GapBetweenRoads,
 
   PlayerMaxLives,
   PlayerInitialYPosition,

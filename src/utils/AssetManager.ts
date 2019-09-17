@@ -13,10 +13,11 @@ const BackgroundString = 'Background';
 const StartPage = './src/assets/Textures/StartPage.png';
 const StartPageString = 'StartPage';
 
-const CarImage = './src/assets/Textures/Car_1.png';
+const CarImage = './src/assets/Textures/Base car.png';
 const CarImageString = 'Car';
 
-const BaseRoad = "./src/assets/Textures/Base road.png"
+const BaseRoad = './src/assets/Textures/Base Road Perspective.png';
+const BaseRoadString = 'BaseRoad';
 
 const ExplosionAudio = './src/assets/Audio/CrashSound.mp3';
 const ExplosionAudioString = 'Explosion';
@@ -46,6 +47,9 @@ export default {
 
   CarImage,
   CarImageString,
+
+  BaseRoad,
+  BaseRoadString,
 
   ExplosionAudio,
   ExplosionAudioString,

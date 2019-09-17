@@ -37,6 +37,10 @@ export class WorldObject3D {
 
   //#region External Functions
 
+  public setSize(x: number, y: number) {
+    this._objectSprite.size = { x, y };
+  }
+
   public isObjectOutOfView(): boolean {
     return this._objectOutOfView;
   }

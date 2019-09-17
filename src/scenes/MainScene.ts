@@ -24,6 +24,7 @@ export class MainScene extends Scene {
   private _carRectangle: Geom.Rectangle;
 
   private _roadMarkers: Array<WorldObject3D>;
+  private _roads: Array<WorldObject3D>;
   private _currentGapMultiplier: number;
   private _roadObjectsRemoved: number;
   private _maxZPosition: number;
@@ -57,6 +58,7 @@ export class MainScene extends Scene {
     });
 
     this._roadMarkers = [];
+    this._roads = [];
     this._roadObjectsRemoved = 0;
 
     this._isCurveSpawnActive = false;
@@ -73,6 +75,7 @@ export class MainScene extends Scene {
     this.load.image(AssetManager.WhitePixelString, AssetManager.WhitePixel);
     this.load.image(AssetManager.BackgroundString, AssetManager.Background);
     this.load.image(AssetManager.CarImageString, AssetManager.CarImage);
+    this.load.image(AssetManager.BaseRoadString, AssetManager.BaseRoad);
 
     this.load.audio(AssetManager.ExplosionAudioString, [AssetManager.ExplosionAudio]);
     this.load.audio(AssetManager.BackgroundMusicString, [AssetManager.BackgroundMusic]);
@@ -113,6 +116,11 @@ export class MainScene extends Scene {
         GameInfo.WorldDefaultY,
         this._mainCamera.z - 20 - i * GameInfo.GapBetweenRoadMarker
       );
+    }
+
+    const totalRoads = initialRoadMarkerCount + 30;
+    for (let i = 0; i < totalRoads; i++) {
+      this.createAndAddRoad(this._currentRoadXPosition, GameInfo.RoadYDistance, this._mainCamera.z - 20 - i * GameInfo.GapBetweenRoads);
     }
 
     this._maxZPosition = this._mainCamera.z - initialRoadMarkerCount * 10;
@@ -179,18 +187,21 @@ export class MainScene extends Scene {
   update(time: number, delta: number) {
     const deltaTime = delta / 1000.0;
 
-    this._playerScore += deltaTime * GameInfo.ScoreIncrementRate;
-    this._currentSpeed += GameInfo.ScoreIncrementRate * deltaTime;
-    this._currentSpeed = Math.min(this._currentSpeed, GameInfo.WorldMovementMaxSpeed);
+    if (this._keyboardCursorKeys.space.isDown) {
+      this._playerScore += deltaTime * GameInfo.ScoreIncrementRate;
+      this._currentSpeed += GameInfo.ScoreIncrementRate * deltaTime;
+      this._currentSpeed = Math.min(this._currentSpeed, GameInfo.WorldMovementMaxSpeed);
 
-    this.updateRoadMarkers(deltaTime);
-    this.updatePlayerMovement(deltaTime);
-    // this.checkCollisions();
-    this.updateCameras(deltaTime);
-    this.updateOtherGameObjects(deltaTime);
+      this.updateRoadMarkers(deltaTime);
+      this.updateRoad(deltaTime);
+      this.updatePlayerMovement(deltaTime);
+      // this.checkCollisions();
+      this.updateCameras(deltaTime);
+      this.updateOtherGameObjects(deltaTime);
 
-    this._objectBlinkerManager.update(deltaTime);
-    this._scrollingBackground.update(deltaTime, this._mainCamera.x);
+      this._objectBlinkerManager.update(deltaTime);
+      this._scrollingBackground.update(deltaTime, this._mainCamera.x);
+    }
   }
 
   private updateRoadMarkers(deltaTime: number) {
@@ -227,6 +238,20 @@ export class MainScene extends Scene {
 
         this.checkAndCreateCurvedRoads();
         this.spawnRoadBoundaryPair(this._currentRoadXPosition, GameInfo.WorldDefaultY, this._maxZPosition);
+      }
+    }
+  }
+
+  private updateRoad(deltaTime: number): void {
+    for (let i = this._roads.length - 1; i >= 0; i--) {
+      const road = this._roads[i];
+
+      road.update(deltaTime, this._currentSpeed);
+      if (road.isObjectOutOfView()) {
+        this._roads[i].destroy();
+        this._roads.splice(i, 1);
+
+        this.createAndAddRoad(this._currentRoadXPosition, GameInfo.RoadYDistance, this._maxZPosition);
       }
     }
   }
@@ -346,6 +371,14 @@ export class MainScene extends Scene {
 
     this._roadMarkers.push(leftMarker);
     this._roadMarkers.push(rightMarker);
+  }
+
+  private createAndAddRoad(x: number, y: number, z: number) {
+    const road = new WorldObject3D(AssetManager.BaseRoadString, this._mainCamera);
+    road.create(x, y, z);
+    road.setSize(30, 10);
+
+    this._roads.push(road);
   }
 
   private cleanUpAndSwitchScene() {
