@@ -34,8 +34,7 @@ export class ObjectShaker {
       if (this._shakeTimer <= 0) {
         this.stopShaking();
       }
-
-      console.log('Shaking Active');
+      
     } else {
       this._shakeOffset.set(0, 0, 0);
     }

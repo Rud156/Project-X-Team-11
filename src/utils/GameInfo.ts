@@ -36,7 +36,7 @@ const GapBetweenRoadMarker = 10;
 const GapIncrementRate = 0.1;
 const RoadYDistance = 50;
 const GapBetweenRoads = 5;
-const WetRoadCount = 50;
+const WetRoadCount = 20;
 const WetRoadSpawnProbability = 0.05;
 const WetRoadMarkerDistanceFromRoad = 30;
 

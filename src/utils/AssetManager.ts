@@ -40,12 +40,18 @@ const WaterMarkPerspectiveString = 'WaterMark';
 const WetRoadMarker = './src/assets/Textures/Marker right.png';
 const WetRoadMarkerString = 'SideMarker';
 
+const WetRoad = './src/assets/Textures/perspwet.png';
+const WetRoadString = 'wetRoad';
+
 const ExplosionSpriteSheet = './src/assets/Textures/Explosion.png';
 const ExplosionSpriteSheetString = 'ExplosionSpriteSheet';
 const ExplodeAnimKey = 'Explode';
 
 const ExplosionAudio = './src/assets/Audio/Explosion.mp3';
 const ExplosionAudioString = 'Explosion';
+
+const CarSkidAudio = './src/assets/Audio/CarSkidding.mp3'
+const CarSkidAudioString = 'CarSkidding';
 
 const BackgroundMusic = './src/assets/Audio/Background.mp3';
 const BackgroundMusicString = 'Background';
@@ -91,9 +97,6 @@ export default {
   BaseRoad,
   BaseRoadString,
 
-  WaterMarkPerspective,
-  WaterMarkPerspectiveString,
-
   WetRoadMarker,
   WetRoadMarkerString,
 
@@ -101,11 +104,17 @@ export default {
   ExplosionSpriteSheetString,
   ExplodeAnimKey,
 
+  WetRoad,
+  WetRoadString,
+
   ExplosionAudio,
   ExplosionAudioString,
 
   BackgroundMusic,
   BackgroundMusicString,
+
+  CarSkidAudio,
+  CarSkidAudioString,
 
   WebFont,
   WebFontString,
