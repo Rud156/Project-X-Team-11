@@ -544,6 +544,8 @@ export class MainScene extends Scene {
 
       this._crashWaitDelay = GameInfo.CrashWaitDelay;
       this._objectBlinkerManager.reset();
+
+      this._playerScore = 0;
     }
   }
 
@@ -628,10 +630,10 @@ export class MainScene extends Scene {
   }
 
   private cleanUpAndSwitchScene() {
-    this.resetScreen(true);
-
     this.scene.switch(GameInfo.GameOverSceneName);
     (this.scene.get(GameInfo.GameOverSceneName) as GameOverScene).setGameOverScore(this._playerScore);
+
+    this.resetScreen(true);
   }
 
   //#endregion
