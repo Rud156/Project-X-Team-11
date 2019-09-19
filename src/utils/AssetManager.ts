@@ -28,14 +28,27 @@ const CarTurnRightImageString = 'CarTurnRight';
 const CarTurnLeftImage = './src/assets/Textures/Car turning left.png';
 const CarTurnLeftImageString = 'CarTurnLeft';
 
+const RoadMarker = './src/assets/Textures/Road marker.png';
+const RoadMarkerString = 'RoadMarker';
+
 const BaseRoad = './src/assets/Textures/Base Road Perspective.png';
 const BaseRoadString = 'BaseRoad';
 
 const WetRoadMarker = './src/assets/Textures/Marker right.png';
 const WetRoadMarkerString = 'SideMarker';
 
-const ExplosionAudio = './src/assets/Audio/CrashSound.mp3';
+const WetRoad = './src/assets/Textures/perspwet.png';
+const WetRoadString = 'wetRoad';
+
+const ExplosionSpriteSheet = './src/assets/Textures/Explosion.png';
+const ExplosionSpriteSheetString = 'ExplosionSpriteSheet';
+const ExplodeAnimKey = 'Explode';
+
+const ExplosionAudio = './src/assets/Audio/Explosion.mp3';
 const ExplosionAudioString = 'Explosion';
+
+const CarSkidAudio = './src/assets/Audio/CarSkidding.mp3';
+const CarSkidAudioString = 'CarSkidding';
 
 const BackgroundMusic = './src/assets/Audio/Background.mp3';
 const BackgroundMusicString = 'Background';
@@ -75,17 +88,30 @@ export default {
   CarTurnLeftImage,
   CarTurnLeftImageString,
 
+  RoadMarker,
+  RoadMarkerString,
+
   BaseRoad,
   BaseRoadString,
 
   WetRoadMarker,
   WetRoadMarkerString,
 
+  ExplosionSpriteSheet,
+  ExplosionSpriteSheetString,
+  ExplodeAnimKey,
+
+  WetRoad,
+  WetRoadString,
+
   ExplosionAudio,
   ExplosionAudioString,
 
   BackgroundMusic,
   BackgroundMusicString,
+
+  CarSkidAudio,
+  CarSkidAudioString,
 
   WebFont,
   WebFontString,

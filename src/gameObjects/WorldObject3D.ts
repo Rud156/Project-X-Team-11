@@ -1,5 +1,6 @@
 import GameInfo from '../utils/GameInfo';
 import { Math } from 'phaser';
+import { WorldObject } from './WorldObject';
 
 export class WorldObject3D {
   private _objectSprite: any;

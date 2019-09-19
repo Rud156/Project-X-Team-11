@@ -7,7 +7,7 @@ const HalfScreenHeight = ScreenHeight / 2.0;
 // World Info
 const WorldMovementSpeed = 100;
 const WorldMovementMaxSpeed = 150;
-const WorldRoadWidth = 80;
+const WorldRoadWidth = 60;
 const WorldDefaultY = 20;
 const DistanceRemoveBehindCamera = 5;
 const SpeedIncrementRate = 1;
@@ -17,8 +17,13 @@ const CrashWaitDelay = 3;
 const PlayerMaxLives = 3;
 const PlayerInitialYPosition = 20;
 const PlayerZCameraOffset = -10;
-const PlayerBlinkRate = 7;
-const PlayerBlinkCount = 5;
+const PlayerBlinkRate = 14;
+const PlayerBlinkCount = 7;
+
+// Animations
+const ScreenFlashCount = 3;
+const ScreenFlashRate = 7;
+const ExplosionAnimationSize = 500;
 
 // Collision
 const CheckCollisionZLimit = 3;
@@ -31,7 +36,7 @@ const GapBetweenRoadMarker = 10;
 const GapIncrementRate = 0.1;
 const RoadYDistance = 50;
 const GapBetweenRoads = 5;
-const WetRoadCount = 50;
+const WetRoadCount = 40;
 const WetRoadSpawnProbability = 0.05;
 const WetRoadMarkerDistanceFromRoad = 30;
 
@@ -42,6 +47,7 @@ const ScoreIncrementRate = 10;
 const CameraDefaultY = 0;
 const CameraDefaultZ = 300;
 const CameraRotationLerpAmount = 750;
+const CameraSkidLerpAmount = 2500;
 const CameraMovementLerpAmount = 7;
 
 // Scrolling Background
@@ -73,6 +79,10 @@ export default {
   PlayerBlinkRate,
   PlayerBlinkCount,
 
+  ScreenFlashCount,
+  ScreenFlashRate,
+  ExplosionAnimationSize,
+
   CheckCollisionZLimit,
 
   CurvedRoadSpawnProbability,
@@ -92,6 +102,7 @@ export default {
   CameraDefaultZ,
   CameraRotationLerpAmount,
   CameraMovementLerpAmount,
+  CameraSkidLerpAmount,
 
   ScrollingBackgroundSpeed,
   ScrollingBackgroundCount,
