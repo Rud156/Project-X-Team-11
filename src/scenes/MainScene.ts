@@ -1,4 +1,4 @@
-import { Scene, Types, Input, GameObjects, Math as Maths, Geom, Sound } from 'phaser';
+import { Scene, Types, Input, GameObjects, Math as Maths, Geom, Sound, Time } from 'phaser';
 import AssetManager from '../utils/AssetManager';
 import GameInfo from '../utils/GameInfo';
 import { WorldObject3D } from '../gameObjects/WorldObject3D';
@@ -9,6 +9,7 @@ import { PlayerController, PlayerDirection } from '../gameObjects/player/PlayerC
 import { GameOverScene } from './GameOverScene';
 import { ObjectBlinkerManager } from '../managers/ObjectBlinkerManager';
 import { ScrollingBackgroundManager } from '../managers/ScrollingBackgroundManager';
+import { types } from 'util';
 
 enum MainSceneStatus {
   Running,
@@ -24,6 +25,7 @@ export class MainScene extends Scene {
 
   private _explosionSound: Sound.BaseSound;
   private _backgroundMusic: Sound.BaseSound;
+  private _skidSound: Sound.BaseSound;
 
   private _car: GameObjects.Sprite;
   private _carRectangle: Geom.Rectangle;
@@ -67,6 +69,7 @@ export class MainScene extends Scene {
 
   private _crashWaitDelay: number;
   private _mainSceneStatus: MainSceneStatus;
+  private _lastWetRoadSpawnTime: number;
 
   //#region Creation
 
@@ -85,7 +88,7 @@ export class MainScene extends Scene {
     this._isLeftCurve = false;
 
     this._currentRoadXPosition = 0;
-
+    this._lastWetRoadSpawnTime = 0;
     this._curveGradient = 1;
     this._maxCurveGradient = 0;
     this._sharpCurveIndex = 0;
@@ -103,9 +106,11 @@ export class MainScene extends Scene {
     this.load.image(AssetManager.CarTurnLeftImageString, AssetManager.CarTurnLeftImage);
     this.load.image(AssetManager.BaseRoadString, AssetManager.BaseRoad);
     this.load.image(AssetManager.WetRoadMarkerString, AssetManager.WetRoadMarker);
+    this.load.image(AssetManager.WetRoadString,AssetManager.WetRoad);
 
     this.load.audio(AssetManager.ExplosionAudioString, [AssetManager.ExplosionAudio]);
     this.load.audio(AssetManager.BackgroundMusicString, [AssetManager.BackgroundMusic]);
+    this.load.audio(AssetManager.CarSkidAudioString, [AssetManager.CarSkidAudio]);
 
     this.load.script(AssetManager.WebFontString, AssetManager.WebFont);
   }
@@ -123,6 +128,7 @@ export class MainScene extends Scene {
 
     this.setMainSceneState(MainSceneStatus.Running);
     this._crashWaitDelay = GameInfo.CrashWaitDelay;
+    this._lastWetRoadSpawnTime = this.time.now;
   }
 
   private createCamera(): void {
@@ -217,11 +223,15 @@ export class MainScene extends Scene {
       volume: 1,
     });
 
+    this._skidSound = this.sound.add(AssetManager.CarSkidAudioString, {
+      volume: 1,
+    });
+
     this._backgroundMusic = this.sound.add(AssetManager.BackgroundMusicString, {
       loop: true,
       volume: 0.5,
     });
-    // this._backgroundMusic.play();
+    this._backgroundMusic.play();
   }
 
   //#endregion
@@ -321,11 +331,13 @@ export class MainScene extends Scene {
 
         // Randomly Spawn Wet Roads
         if (!this._isWetRoadActive) {
-          const randomNumber = Math.random();
-          if (randomNumber <= GameInfo.WetRoadSpawnProbability) {
+          
+          if ((this.time.now - this._lastWetRoadSpawnTime) > 5000) {
+            this._lastWetRoadSpawnTime = this.time.now;
             this._isWetRoadActive = true;
             this._currentWetRoadCount = GameInfo.WetRoadCount;
 
+            
             this.addWetRoadMarker(this._currentRoadXPosition, GameInfo.WorldDefaultY, this._maxZPosition);
           }
         }
@@ -339,10 +351,12 @@ export class MainScene extends Scene {
         }
 
         this.createAndAddRoad(this._currentRoadXPosition, GameInfo.RoadYDistance, this._maxZPosition, this._isWetRoadActive);
+       
       }
     }
 
-    this._playerController.setControlFlippedState(playerTouchedWetRoad);
+    //this._playerController.setControlFlippedState(playerTouchedWetRoad);
+    //this._skidSound.play();
   }
 
   private updateWetRoadMarkers(deltaTime: number) {
@@ -359,7 +373,17 @@ export class MainScene extends Scene {
 
   private updatePlayerMovement(deltaTime: number): void {
     this._playerController.update();
-    this._player.update(deltaTime, this._currentSpeed, this._playerController.PlayerDirection);
+    const road = this._roads[0];
+    if(road.getData().isWetRoad){
+      this._player.update(deltaTime, this._currentSpeed, this._playerController.PlayerDirection,true);
+      if(this._playerController.PlayerDirection !== PlayerDirection.None){
+        this._skidSound.play();
+      }
+      
+      console.log("speed:" , this._currentSpeed, this._currentSpeed/2);
+    }else{
+      this._player.update(deltaTime, this._currentSpeed, this._playerController.PlayerDirection,false);
+    }
 
     if (this._prevControlDirection !== this._playerController.PlayerDirection) {
       if (this._playerController.PlayerDirection === PlayerDirection.Left) {
@@ -479,11 +503,12 @@ export class MainScene extends Scene {
     this._curveGradient = 1;
     this._maxCurveGradient = 0;
     this._sharpCurveIndex = 1;
-
+    this._lastWetRoadSpawnTime = 0;
     if (completeSceneReset) {
       this._playerLives = GameInfo.PlayerMaxLives;
       this._playerLivesDisplay.setText(`Lives: ${this._playerLives}`);
 
+      
       this._currentSpeed = GameInfo.WorldMovementSpeed;
       this._mainSceneStatus = MainSceneStatus.Running;
 
@@ -548,16 +573,30 @@ export class MainScene extends Scene {
   }
 
   private createAndAddRoad(x: number, y: number, z: number, isWetRoad: boolean = false) {
-    const road = new WorldObject3D(AssetManager.BaseRoadString, this._mainCamera);
-    road.create(x, y, z);
-    road.setSize(30, 10);
-    road.setData({ isWetRoad });
 
-    if (isWetRoad) {
-      road.setTint(0xff0000);
-    }
+  
 
-    this._roads.push(road);
+  const road = new WorldObject3D(AssetManager.BaseRoadString, this._mainCamera);
+  const wetRoad = new WorldObject3D(AssetManager.WetRoadString, this._mainCamera);
+
+
+  road.create(x, y, z);
+  road.setSize(30, 10);
+  road.setData({ isWetRoad });
+
+
+  this._roads.push(road);
+
+  if(isWetRoad){
+  wetRoad.create(x,y,z);
+  wetRoad.setSize(30, 10);
+  wetRoad.setData(true);
+  this._roads.push(wetRoad);
+  }
+
+
+  
+  
   }
 
   private setMainSceneState(mainSceneStatus: MainSceneStatus) {

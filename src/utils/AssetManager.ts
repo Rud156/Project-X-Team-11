@@ -34,8 +34,14 @@ const BaseRoadString = 'BaseRoad';
 const WetRoadMarker = './src/assets/Textures/Marker right.png';
 const WetRoadMarkerString = 'SideMarker';
 
+const WetRoad = './src/assets/Textures/perspwet.png';
+const WetRoadString = 'wetRoad';
+
 const ExplosionAudio = './src/assets/Audio/CrashSound.mp3';
 const ExplosionAudioString = 'Explosion';
+
+const CarSkidAudio = './src/assets/Audio/CarSkidding.mp3'
+const CarSkidAudioString = 'CarSkidding';
 
 const BackgroundMusic = './src/assets/Audio/Background.mp3';
 const BackgroundMusicString = 'Background';
@@ -81,11 +87,17 @@ export default {
   WetRoadMarker,
   WetRoadMarkerString,
 
+  WetRoad,
+  WetRoadString,
+
   ExplosionAudio,
   ExplosionAudioString,
 
   BackgroundMusic,
   BackgroundMusicString,
+
+  CarSkidAudio,
+  CarSkidAudioString,
 
   WebFont,
   WebFontString,

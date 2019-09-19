@@ -6,7 +6,7 @@ export class PlayerController {
   private _input: Input.InputPlugin;
   private _keyboardCursorKeys: Types.Input.Keyboard.CursorKeys;
 
-  private _isControlsFlipped: boolean;
+  //private _isControlsFlipped: boolean;
 
   //#region Creation
 
@@ -14,7 +14,6 @@ export class PlayerController {
     this._playerDirection = PlayerDirection.None;
     this._input = input;
 
-    this._isControlsFlipped = false;
     this._keyboardCursorKeys = input.keyboard.createCursorKeys();
   }
 
@@ -24,9 +23,9 @@ export class PlayerController {
 
   public update(): void {
     if (this._keyboardCursorKeys.left.isDown) {
-      this._playerDirection = this._isControlsFlipped ? PlayerDirection.Right : PlayerDirection.Left;
+      this._playerDirection = PlayerDirection.Left;
     } else if (this._keyboardCursorKeys.right.isDown) {
-      this._playerDirection = this._isControlsFlipped ? PlayerDirection.Left : PlayerDirection.Right;
+      this._playerDirection = PlayerDirection.Right;
     } else {
       this._playerDirection = PlayerDirection.None;
     }
@@ -37,9 +36,9 @@ export class PlayerController {
         const horizontalAxis = gamepad.axes[0].getValue();
 
         if (horizontalAxis > 0) {
-          this._playerDirection = this._isControlsFlipped ? PlayerDirection.Left : PlayerDirection.Right;
+          this._playerDirection =PlayerDirection.Right;
         } else if (horizontalAxis < 0) {
-          this._playerDirection = this._isControlsFlipped ? PlayerDirection.Right : PlayerDirection.Left;
+          this._playerDirection = PlayerDirection.Left;
         } else {
           this._playerDirection = PlayerDirection.None;
         }
@@ -51,13 +50,12 @@ export class PlayerController {
 
   //#region External Functions
 
-  public setControlFlippedState(isControlsFlipped: boolean) {
+ /* public setControlFlippedState(isControlsFlipped: boolean) {
     this._isControlsFlipped = isControlsFlipped;
-  }
+  }*/
 
   public resetController() {
     this._playerDirection = PlayerDirection.None;
-    this._isControlsFlipped = false;
   }
 
   public get PlayerDirection(): PlayerDirection {
