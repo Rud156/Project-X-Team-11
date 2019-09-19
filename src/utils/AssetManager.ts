@@ -34,9 +34,6 @@ const RoadMarkerString = 'RoadMarker';
 const BaseRoad = './src/assets/Textures/Base Road Perspective.png';
 const BaseRoadString = 'BaseRoad';
 
-const WaterMarkPerspective = './src/assets/Textures/Perspwet.png';
-const WaterMarkPerspectiveString = 'WaterMark';
-
 const WetRoadMarker = './src/assets/Textures/Marker right.png';
 const WetRoadMarkerString = 'SideMarker';
 
@@ -50,7 +47,7 @@ const ExplodeAnimKey = 'Explode';
 const ExplosionAudio = './src/assets/Audio/Explosion.mp3';
 const ExplosionAudioString = 'Explosion';
 
-const CarSkidAudio = './src/assets/Audio/CarSkidding.mp3'
+const CarSkidAudio = './src/assets/Audio/CarSkidding.mp3';
 const CarSkidAudioString = 'CarSkidding';
 
 const BackgroundMusic = './src/assets/Audio/Background.mp3';

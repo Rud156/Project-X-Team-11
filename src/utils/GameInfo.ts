@@ -36,7 +36,7 @@ const GapBetweenRoadMarker = 10;
 const GapIncrementRate = 0.1;
 const RoadYDistance = 50;
 const GapBetweenRoads = 5;
-const WetRoadCount = 20;
+const WetRoadCount = 40;
 const WetRoadSpawnProbability = 0.05;
 const WetRoadMarkerDistanceFromRoad = 30;
 
@@ -47,6 +47,7 @@ const ScoreIncrementRate = 10;
 const CameraDefaultY = 0;
 const CameraDefaultZ = 300;
 const CameraRotationLerpAmount = 750;
+const CameraSkidLerpAmount = 2500;
 const CameraMovementLerpAmount = 7;
 
 // Scrolling Background
@@ -101,6 +102,7 @@ export default {
   CameraDefaultZ,
   CameraRotationLerpAmount,
   CameraMovementLerpAmount,
+  CameraSkidLerpAmount,
 
   ScrollingBackgroundSpeed,
   ScrollingBackgroundCount,

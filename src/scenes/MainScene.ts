@@ -109,8 +109,7 @@ export class MainScene extends Scene {
     this.load.image(AssetManager.RoadMarkerString, AssetManager.RoadMarker);
     this.load.image(AssetManager.BaseRoadString, AssetManager.BaseRoad);
     this.load.image(AssetManager.WetRoadMarkerString, AssetManager.WetRoadMarker);
-    this.load.image(AssetManager.WetRoadString,AssetManager.WetRoad);
-    this.load.image(AssetManager.WaterMarkPerspectiveString, AssetManager.WaterMarkPerspective);
+    this.load.image(AssetManager.WetRoadString, AssetManager.WetRoad);
     this.load.spritesheet(AssetManager.ExplosionSpriteSheetString, AssetManager.ExplosionSpriteSheet, {
       frameWidth: 256,
     });
@@ -364,13 +363,11 @@ export class MainScene extends Scene {
 
         // Randomly Spawn Wet Roads
         if (!this._isWetRoadActive) {
-          
-          if ((this.time.now - this._lastWetRoadSpawnTime) > 5000) {
+          if (this.time.now - this._lastWetRoadSpawnTime > 5000) {
             this._lastWetRoadSpawnTime = this.time.now;
             this._isWetRoadActive = true;
             this._currentWetRoadCount = GameInfo.WetRoadCount;
 
-            
             this.addWetRoadMarker(this._currentRoadXPosition, GameInfo.WorldDefaultY, this._maxZPosition);
           }
         }
@@ -384,7 +381,6 @@ export class MainScene extends Scene {
         }
 
         this.createAndAddRoad(this._currentRoadXPosition, GameInfo.RoadYDistance, this._maxZPosition, this._isWetRoadActive);
-       
       }
     }
   }
@@ -404,13 +400,13 @@ export class MainScene extends Scene {
   private updatePlayerMovement(deltaTime: number): void {
     this._playerController.update();
     const road = this._roads[0];
-    if(road.getData().isWetRoad){
-      this._player.update(deltaTime, this._currentSpeed, this._playerController.PlayerDirection,true);
-      if(this._playerController.PlayerDirection !== PlayerDirection.None){
+    if (road.getData().isWetRoad) {
+      this._player.update(deltaTime, this._currentSpeed, this._playerController.PlayerDirection, true);
+      if (this._playerController.PlayerDirection !== PlayerDirection.None) {
         this._skidSound.play();
       }
-    }else{
-      this._player.update(deltaTime, this._currentSpeed, this._playerController.PlayerDirection,false);
+    } else {
+      this._player.update(deltaTime, this._currentSpeed, this._playerController.PlayerDirection, false);
     }
 
     if (this._prevControlDirection !== this._playerController.PlayerDirection) {
@@ -476,11 +472,12 @@ export class MainScene extends Scene {
     this._mainCamera.z = GameInfo.CameraDefaultZ;
 
     const shakePosition = this._cameraShaker.update(deltaTime, this._mainCamera.x, this._mainCamera.y, this._mainCamera.z);
+    const lerpAmount = this._playerTouchedWetRoad ? GameInfo.CameraSkidLerpAmount : GameInfo.CameraRotationLerpAmount;
 
     if (this._playerController.PlayerDirection === PlayerDirection.Left) {
-      this._lookAtLerp -= (this._currentSpeed + GameInfo.CameraRotationLerpAmount) * deltaTime;
+      this._lookAtLerp -= (this._currentSpeed + lerpAmount) * deltaTime;
     } else if (this._playerController.PlayerDirection === PlayerDirection.Right) {
-      this._lookAtLerp += (this._currentSpeed + GameInfo.CameraRotationLerpAmount) * deltaTime;
+      this._lookAtLerp += (this._currentSpeed + lerpAmount) * deltaTime;
     }
 
     this._mainCamera.setPosition(shakePosition.x, shakePosition.y, shakePosition.z);
@@ -536,7 +533,7 @@ export class MainScene extends Scene {
     this._maxCurveGradient = 0;
     this._sharpCurveIndex = 1;
     this._lastWetRoadSpawnTime = 0;
-    
+
     if (completeSceneReset) {
       this._playerLives = GameInfo.PlayerMaxLives;
       this._playerLivesDisplay.setText(`Lives: ${this._playerLives}`);
@@ -608,30 +605,21 @@ export class MainScene extends Scene {
   }
 
   private createAndAddRoad(x: number, y: number, z: number, isWetRoad: boolean = false) {
+    const road = new WorldObject3D(AssetManager.BaseRoadString, this._mainCamera);
+    const wetRoad = new WorldObject3D(AssetManager.WetRoadString, this._mainCamera);
 
-  
+    road.create(x, y, z);
+    road.setSize(30, 10);
+    road.setData({ isWetRoad });
 
-  const road = new WorldObject3D(AssetManager.BaseRoadString, this._mainCamera);
-  const wetRoad = new WorldObject3D(AssetManager.WetRoadString, this._mainCamera);
+    this._roads.push(road);
 
-
-  road.create(x, y, z);
-  road.setSize(30, 10);
-  road.setData({ isWetRoad });
-
-
-  this._roads.push(road);
-
-  if(isWetRoad){
-  wetRoad.create(x,y,z);
-  wetRoad.setSize(30, 10);
-  wetRoad.setData(true);
-  this._roads.push(wetRoad);
-  }
-
-
-  
-  
+    if (isWetRoad) {
+      wetRoad.create(x, y, z);
+      wetRoad.setSize(30, 10);
+      wetRoad.setData(true);
+      this._roads.push(wetRoad);
+    }
   }
 
   private setMainSceneState(mainSceneStatus: MainSceneStatus) {

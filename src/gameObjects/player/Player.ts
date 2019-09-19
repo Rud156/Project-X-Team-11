@@ -25,8 +25,8 @@ export class Player {
 
   //#region Update
 
-  public update(deltaTime: number, currentSpeed: number, controlDirection: PlayerDirection,isWetRoad: boolean) {
-    if(isWetRoad){
+  public update(deltaTime: number, currentSpeed: number, controlDirection: PlayerDirection, isWetRoad: boolean) {
+    if (isWetRoad) {
       if (controlDirection == PlayerDirection.Left) {
         this._playerSprite.x -= currentSpeed * deltaTime;
         this._playerSprite.y -= currentSpeed * deltaTime;
@@ -34,13 +34,13 @@ export class Player {
         this._playerSprite.x += currentSpeed * deltaTime;
         this._playerSprite.y += currentSpeed * deltaTime;
       }
-  }else{
-    if (controlDirection == PlayerDirection.Left) {
-      this._playerSprite.x -= currentSpeed * deltaTime;
-    } else if (controlDirection == PlayerDirection.Right) {
-      this._playerSprite.x += currentSpeed * deltaTime;
+    } else {
+      if (controlDirection == PlayerDirection.Left) {
+        this._playerSprite.x -= currentSpeed * deltaTime;
+      } else if (controlDirection == PlayerDirection.Right) {
+        this._playerSprite.x += currentSpeed * deltaTime;
+      }
     }
-  }
   }
 
   //#endregion
