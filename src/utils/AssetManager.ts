@@ -37,7 +37,7 @@ const BaseRoadString = 'BaseRoad';
 const WetRoadMarker = './src/assets/Textures/Marker right.png';
 const WetRoadMarkerString = 'SideMarker';
 
-const WetRoad = './src/assets/Textures/perspwet.png';
+const WetRoad = './src/assets/Textures/Perspwet.png';
 const WetRoadString = 'wetRoad';
 
 const ExplosionSpriteSheet = './src/assets/Textures/Explosion.png';
