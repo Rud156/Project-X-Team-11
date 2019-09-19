@@ -1,16 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="width: 100%; height: 100%; margin: 0; padding: 0">
   <head>
     <meta charset="UTF-8" />
     <meta name="author" content="team11" />
     <title>Team 11</title>
     <link rel="stylesheet" type="text/css" href="styles/css/styles.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
-    <script src="dist/bundle.js"></script>
+    <script src="./dist/bundle.js"></script>
   </head>
-  <body>
-    <div class="container">
+  <body style="width: 100%; height: 100%; padding: 0; margin: 0; top: 0; left: 0; background-color: black">
+    <div class="container" style="display: flex; flex-direction: row; height: 100%">
+      <div style="width: calc(100% - 800px)">
+        <img src="./src/assets/Textures/Cabinet left.png" alt="Cabinet Art Left" style="width: 100%">
+      </div>
       <div id="game"></div>
+      <div style="width: calc(100% - 800px)">
+        <img src="./src/assets/Textures/Cabinet right.png" alt="Cabinet Art Right" style="width: 100%;">
+      </div>
     </div>
   </body>
 </html>

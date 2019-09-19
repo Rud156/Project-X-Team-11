@@ -175,7 +175,7 @@ export class MainScene extends Scene {
     this._carRectangle = this._car.getBounds();
     const carRectangle = new Geom.Rectangle();
 
-    const rectangleExpansion = 100;
+    const rectangleExpansion = 50;
     carRectangle.width = this._carRectangle.width + rectangleExpansion;
     carRectangle.height = this._carRectangle.height + rectangleExpansion;
     carRectangle.x = this._carRectangle.x;

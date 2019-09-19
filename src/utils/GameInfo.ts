@@ -7,7 +7,7 @@ const HalfScreenHeight = ScreenHeight / 2.0;
 // World Info
 const WorldMovementSpeed = 100;
 const WorldMovementMaxSpeed = 150;
-const WorldRoadWidth = 80;
+const WorldRoadWidth = 60;
 const WorldDefaultY = 20;
 const DistanceRemoveBehindCamera = 5;
 const SpeedIncrementRate = 1;
