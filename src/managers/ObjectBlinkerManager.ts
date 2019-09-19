@@ -7,16 +7,25 @@ class BlinkerItem {
   public blinkCount;
   public isInfinite: boolean;
 
+  private _exitWithZeroAlpha: boolean;
   private _currentAlpha;
   private _isFlashIn;
 
-  constructor(displayItem: GameObjects.Components.Alpha, index: number, blinkRate: number, blinkCount: number, isInfinite: boolean) {
+  constructor(
+    displayItem: GameObjects.Components.Alpha,
+    index: number,
+    blinkRate: number,
+    blinkCount: number,
+    isInfinite: boolean = false,
+    exitWithZeroAlpha: boolean = false
+  ) {
     this.displayItem = displayItem;
     this.index = index;
     this.blinkRate = blinkRate;
     this.blinkCount = blinkCount;
     this.isInfinite = isInfinite;
 
+    this._exitWithZeroAlpha = exitWithZeroAlpha;
     this._currentAlpha = 1;
     this._isFlashIn = false;
   }
@@ -35,6 +44,14 @@ class BlinkerItem {
 
   public set IsFlashIn(v: boolean) {
     this._isFlashIn = v;
+  }
+
+  public get ExitWithZeroAlpha(): boolean {
+    return this._exitWithZeroAlpha;
+  }
+
+  public set ExitWithZeroAlpha(v: boolean) {
+    this._exitWithZeroAlpha = v;
   }
 }
 
@@ -63,13 +80,19 @@ export class ObjectBlinkerManager {
           blinkerItem.IsFlashIn = false;
           blinkerItem.CurrentAlpha = 1;
 
-          blinkerItem.blinkCount -= 1;
+          if (!blinkerItem.ExitWithZeroAlpha) {
+            blinkerItem.blinkCount -= 1;
+          }
         }
       } else {
         blinkerItem.CurrentAlpha -= blinkerItem.blinkRate * deltaTime;
         if (blinkerItem.CurrentAlpha <= 0) {
           blinkerItem.IsFlashIn = true;
           blinkerItem.CurrentAlpha = 0;
+
+          if (blinkerItem.ExitWithZeroAlpha) {
+            blinkerItem.blinkCount -= 1;
+          }
         }
       }
 
@@ -90,14 +113,20 @@ export class ObjectBlinkerManager {
 
   //#region External Functions
 
-  public addItemToFlash(displayItem: GameObjects.Components.Alpha, blinkRate: number, blinkCount: number, isInfinite: boolean): number {
+  public addItemToFlash(
+    displayItem: GameObjects.Components.Alpha,
+    blinkRate: number,
+    blinkCount: number,
+    isInfinite: boolean = false,
+    exitWithZeroAlpha: boolean = false
+  ): number {
     const existingItemIndex = this.getBlinkerItemByType(displayItem);
     if (existingItemIndex !== -1) {
       console.log('Item Already Exists');
       return;
     }
 
-    const blinkerItem = new BlinkerItem(displayItem, this._currentIndex, blinkRate, blinkCount, isInfinite);
+    const blinkerItem = new BlinkerItem(displayItem, this._currentIndex, blinkRate, blinkCount, isInfinite, exitWithZeroAlpha);
 
     this._displayItems.push(blinkerItem);
     this._currentIndex += 1;

@@ -17,8 +17,13 @@ const CrashWaitDelay = 3;
 const PlayerMaxLives = 3;
 const PlayerInitialYPosition = 20;
 const PlayerZCameraOffset = -10;
-const PlayerBlinkRate = 7;
-const PlayerBlinkCount = 5;
+const PlayerBlinkRate = 14;
+const PlayerBlinkCount = 7;
+
+// Animations
+const ScreenFlashCount = 3;
+const ScreenFlashRate = 7;
+const ExplosionAnimationSize = 500;
 
 // Collision
 const CheckCollisionZLimit = 3;
@@ -72,6 +77,10 @@ export default {
   PlayerZCameraOffset,
   PlayerBlinkRate,
   PlayerBlinkCount,
+
+  ScreenFlashCount,
+  ScreenFlashRate,
+  ExplosionAnimationSize,
 
   CheckCollisionZLimit,
 

@@ -31,10 +31,17 @@ const CarTurnLeftImageString = 'CarTurnLeft';
 const BaseRoad = './src/assets/Textures/Base Road Perspective.png';
 const BaseRoadString = 'BaseRoad';
 
+const WaterMarkPerspective = './src/assets/Textures/Perspwet.png';
+const WaterMarkPerspectiveString = 'WaterMark';
+
 const WetRoadMarker = './src/assets/Textures/Marker right.png';
 const WetRoadMarkerString = 'SideMarker';
 
-const ExplosionAudio = './src/assets/Audio/CrashSound.mp3';
+const ExplosionSpriteSheet = './src/assets/Textures/Explosion.png';
+const ExplosionSpriteSheetString = 'ExplosionSpriteSheet';
+const ExplodeAnimKey = 'Explode';
+
+const ExplosionAudio = './src/assets/Audio/Explosion.mp3';
 const ExplosionAudioString = 'Explosion';
 
 const BackgroundMusic = './src/assets/Audio/Background.mp3';
@@ -78,8 +85,15 @@ export default {
   BaseRoad,
   BaseRoadString,
 
+  WaterMarkPerspective,
+  WaterMarkPerspectiveString,
+
   WetRoadMarker,
   WetRoadMarkerString,
+
+  ExplosionSpriteSheet,
+  ExplosionSpriteSheetString,
+  ExplodeAnimKey,
 
   ExplosionAudio,
   ExplosionAudioString,

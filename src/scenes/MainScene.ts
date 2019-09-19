@@ -1,4 +1,4 @@
-import { Scene, Types, Input, GameObjects, Math as Maths, Geom, Sound } from 'phaser';
+import { Scene, Types, Input, GameObjects, Math as Maths, Geom, Sound, Animations } from 'phaser';
 import AssetManager from '../utils/AssetManager';
 import GameInfo from '../utils/GameInfo';
 import { WorldObject3D } from '../gameObjects/WorldObject3D';
@@ -22,6 +22,9 @@ export class MainScene extends Scene {
   private _scrollingBackground: ScrollingBackgroundManager;
   private _objectBlinkerManager: ObjectBlinkerManager;
 
+  private _explosionAnimation: GameObjects.Sprite;
+  private _screenFlasher: GameObjects.Sprite;
+
   private _explosionSound: Sound.BaseSound;
   private _backgroundMusic: Sound.BaseSound;
 
@@ -39,6 +42,7 @@ export class MainScene extends Scene {
   private _isWetRoadActive: boolean;
   private _currentWetRoadCount: number;
   private _wetRoadMarkers: Array<WorldObject3D>;
+  private _playerTouchedWetRoad: boolean;
 
   private _mainCamera: any; // 3D Camera
   private cameras3d: any; // Placeholder 3D Cameras
@@ -97,12 +101,15 @@ export class MainScene extends Scene {
     this.load.image(AssetManager.LineMarkerString, AssetManager.LineMarker);
     this.load.image(AssetManager.WhitePixelString, AssetManager.WhitePixel);
     this.load.image(AssetManager.BackgroundString, AssetManager.Background);
-    this.load.image(AssetManager.MoonImageString, AssetManager.MoonImage);
     this.load.image(AssetManager.CarImageString, AssetManager.CarImage);
     this.load.image(AssetManager.CarTurnRightImageString, AssetManager.CarTurnRightImage);
     this.load.image(AssetManager.CarTurnLeftImageString, AssetManager.CarTurnLeftImage);
     this.load.image(AssetManager.BaseRoadString, AssetManager.BaseRoad);
     this.load.image(AssetManager.WetRoadMarkerString, AssetManager.WetRoadMarker);
+    this.load.image(AssetManager.WaterMarkPerspectiveString, AssetManager.WaterMarkPerspective);
+    this.load.spritesheet(AssetManager.ExplosionSpriteSheetString, AssetManager.ExplosionSpriteSheet, {
+      frameWidth: 256,
+    });
 
     this.load.audio(AssetManager.ExplosionAudioString, [AssetManager.ExplosionAudio]);
     this.load.audio(AssetManager.BackgroundMusicString, [AssetManager.BackgroundMusic]);
@@ -116,6 +123,7 @@ export class MainScene extends Scene {
     this.createPlayer();
     this.createOtherSceneItem();
     this.createSounds();
+    this.createAnimations();
 
     this._currentSpeed = GameInfo.WorldMovementSpeed;
     this._testKey = this.input.keyboard.addKey(Input.Keyboard.KeyCodes.X);
@@ -203,8 +211,6 @@ export class MainScene extends Scene {
       },
     });
 
-    this.add.image(GameInfo.ScreenWidth - 200, 50, AssetManager.MoonImageString).setDepth(-4000);
-
     this._scrollingBackground = new ScrollingBackgroundManager(this);
     this._scrollingBackground.create(AssetManager.BackgroundString);
 
@@ -219,9 +225,36 @@ export class MainScene extends Scene {
 
     this._backgroundMusic = this.sound.add(AssetManager.BackgroundMusicString, {
       loop: true,
-      volume: 0.5,
+      volume: 0.3,
     });
-    // this._backgroundMusic.play();
+    this._backgroundMusic.play();
+  }
+
+  private createAnimations(): void {
+    const explosionAnimation = this.anims.create({
+      frameRate: 16,
+      repeat: 0,
+      key: AssetManager.ExplodeAnimKey,
+      skipMissedFrames: true,
+      frames: this.anims.generateFrameNumbers(AssetManager.ExplosionSpriteSheetString, {}),
+    });
+
+    this._explosionAnimation = this.add.sprite(
+      GameInfo.HalfScreenWidth,
+      GameInfo.ScreenHeight - 74,
+      AssetManager.ExplosionSpriteSheetString
+    );
+    this._explosionAnimation.on(`animationcomplete-${AssetManager.ExplodeAnimKey}`, () => {
+      this._explosionAnimation.setVisible(false);
+    });
+    this._explosionAnimation.setDisplaySize(GameInfo.ExplosionAnimationSize, GameInfo.ExplosionAnimationSize);
+    this._explosionAnimation.setSize(GameInfo.ExplosionAnimationSize, GameInfo.ExplosionAnimationSize);
+    this._explosionAnimation.setVisible(false);
+
+    this._screenFlasher = this.add.sprite(GameInfo.HalfScreenWidth, GameInfo.HalfScreenHeight, AssetManager.WhitePixelString);
+    this._screenFlasher.setDisplaySize(GameInfo.ScreenWidth, GameInfo.ScreenHeight);
+    this._screenFlasher.setSize(GameInfo.ScreenWidth, GameInfo.ScreenHeight);
+    this._screenFlasher.setVisible(false);
   }
 
   //#endregion
@@ -232,7 +265,7 @@ export class MainScene extends Scene {
     const deltaTime = delta / 1000.0;
 
     if (Phaser.Input.Keyboard.JustDown(this._testKey)) {
-      this._cameraShaker.startShaking(1, 1, 1, 1);
+      // Do Nothing. Or use only for testing...
     }
 
     if (this._mainSceneStatus === MainSceneStatus.Running) {
@@ -302,7 +335,7 @@ export class MainScene extends Scene {
   }
 
   private updateRoads(deltaTime: number): void {
-    let playerTouchedWetRoad = false;
+    this._playerTouchedWetRoad = false;
 
     for (let i = this._roads.length - 1; i >= 0; i--) {
       const road = this._roads[i];
@@ -311,7 +344,7 @@ export class MainScene extends Scene {
       if (road.getData().isWetRoad) {
         const roadPosition = road.getObjectPosition();
         if (roadPosition.z >= this._mainCamera.z - GameInfo.DistanceRemoveBehindCamera) {
-          playerTouchedWetRoad = true;
+          this._playerTouchedWetRoad = true;
         }
       }
 
@@ -341,8 +374,6 @@ export class MainScene extends Scene {
         this.createAndAddRoad(this._currentRoadXPosition, GameInfo.RoadYDistance, this._maxZPosition, this._isWetRoadActive);
       }
     }
-
-    this._playerController.setControlFlippedState(playerTouchedWetRoad);
   }
 
   private updateWetRoadMarkers(deltaTime: number) {
@@ -396,7 +427,6 @@ export class MainScene extends Scene {
         this._cameraShaker.startShaking(1, 1, 1, 1);
         this._carShaker.startShaking(1, 10, 10, 0);
 
-        this._lookAtLerp = 0;
         this._playerController.resetController();
 
         if (this._playerLives <= 0) {
@@ -406,8 +436,13 @@ export class MainScene extends Scene {
           this.resetScreen();
         }
 
-        this._objectBlinkerManager.addItemToFlash(this._car, GameInfo.PlayerBlinkRate, GameInfo.PlayerBlinkCount, false);
+        this._explosionAnimation.setVisible(true);
+        this._explosionAnimation.play(AssetManager.ExplodeAnimKey);
 
+        this._screenFlasher.setVisible(true);
+        this._objectBlinkerManager.addItemToFlash(this._screenFlasher, GameInfo.ScreenFlashRate, GameInfo.ScreenFlashCount, false, true);
+
+        this._objectBlinkerManager.addItemToFlash(this._car, GameInfo.PlayerBlinkRate, GameInfo.PlayerBlinkCount);
         this._explosionSound.play();
       }
     }
@@ -552,10 +587,6 @@ export class MainScene extends Scene {
     road.create(x, y, z);
     road.setSize(30, 10);
     road.setData({ isWetRoad });
-
-    if (isWetRoad) {
-      road.setTint(0xff0000);
-    }
 
     this._roads.push(road);
   }

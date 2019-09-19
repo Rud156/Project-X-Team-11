@@ -58,9 +58,9 @@ export class HomeScene extends Scene {
 
     this._backgroundMusic = this.sound.add(AssetManager.BackgroundMusicString, {
       loop: true,
-      volume: 0.5,
+      volume: 0.3,
     });
-    // this._backgroundMusic.play();
+    this._backgroundMusic.play();
   }
 
   //#endregion
