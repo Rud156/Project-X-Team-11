@@ -435,7 +435,8 @@ export class MainScene extends Scene {
 
       const position = roadMarker.getObjectPosition();
       const screenPosition = roadMarker.getUnProjectedVector();
-      this._mainCamera.project(position, screenPosition);
+      const diffPosition = new Maths.Vector4(position.x, position.y + 3, position.z, position.w);
+      this._mainCamera.project(diffPosition, screenPosition);
       roadMarker.setUnProjectedVector(screenPosition);
 
       if (this._carRectangle.contains(screenPosition.x, screenPosition.y)) {
