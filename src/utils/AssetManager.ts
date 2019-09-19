@@ -28,6 +28,9 @@ const CarTurnRightImageString = 'CarTurnRight';
 const CarTurnLeftImage = './src/assets/Textures/Car turning left.png';
 const CarTurnLeftImageString = 'CarTurnLeft';
 
+const RoadMarker = './src/assets/Textures/Road marker.png';
+const RoadMarkerString = 'RoadMarker';
+
 const BaseRoad = './src/assets/Textures/Base Road Perspective.png';
 const BaseRoadString = 'BaseRoad';
 
@@ -81,6 +84,9 @@ export default {
 
   CarTurnLeftImage,
   CarTurnLeftImageString,
+
+  RoadMarker,
+  RoadMarkerString,
 
   BaseRoad,
   BaseRoadString,

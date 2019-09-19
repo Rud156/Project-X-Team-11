@@ -104,6 +104,7 @@ export class MainScene extends Scene {
     this.load.image(AssetManager.CarImageString, AssetManager.CarImage);
     this.load.image(AssetManager.CarTurnRightImageString, AssetManager.CarTurnRightImage);
     this.load.image(AssetManager.CarTurnLeftImageString, AssetManager.CarTurnLeftImage);
+    this.load.image(AssetManager.RoadMarkerString, AssetManager.RoadMarker);
     this.load.image(AssetManager.BaseRoadString, AssetManager.BaseRoad);
     this.load.image(AssetManager.WetRoadMarkerString, AssetManager.WetRoadMarker);
     this.load.image(AssetManager.WaterMarkPerspectiveString, AssetManager.WaterMarkPerspective);
@@ -556,11 +557,14 @@ export class MainScene extends Scene {
   }
 
   private spawnRoadBoundaryPair(x: number, y: number, z: number) {
-    const leftMarker = new WorldObject3D(AssetManager.LineMarkerString, this._mainCamera);
-    const rightMarker = new WorldObject3D(AssetManager.LineMarkerString, this._mainCamera);
+    const leftMarker = new WorldObject3D(AssetManager.RoadMarkerString, this._mainCamera);
+    const rightMarker = new WorldObject3D(AssetManager.RoadMarkerString, this._mainCamera);
 
     leftMarker.create(x - GameInfo.WorldRoadWidth / 2.0, y, z);
     rightMarker.create(x + GameInfo.WorldRoadWidth / 2.0, y, z);
+
+    leftMarker.setSize(10, 15);
+    rightMarker.setSize(10, 15);
 
     this._roadMarkers.push(leftMarker);
     this._roadMarkers.push(rightMarker);
