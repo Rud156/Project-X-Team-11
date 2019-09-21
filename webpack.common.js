@@ -25,7 +25,6 @@ module.exports = {
       { test: /phaser\.js$/, loader: 'expose-loader?Phaser' },
     ],
   },
-  devtool: 'inline-source-map',
   devServer: {
     contentBase: path.resolve(__dirname, './'),
     publicPath: '/dist/',
@@ -39,11 +38,5 @@ module.exports = {
       phaser: phaser,
     },
   },
-  plugins: [
-    new FriendlyErrorsWebpackPlugin(),
-    new ForkTsCheckerWebpackPlugin({
-      reportFiles: ['!src/phaser.d.ts'],
-    }),
-    new WebpackBar(),
-  ],
+  plugins: [new FriendlyErrorsWebpackPlugin(), new ForkTsCheckerWebpackPlugin(), new WebpackBar()],
 };
